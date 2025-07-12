@@ -1,0 +1,3254 @@
+PS D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed>     RE::TESForm* LookupFormByEditorID(const std::string& modName, const std::string& editorID) {
+>>         auto dataHandler = RE::TESDataHandler::GetSingleton();
+>>         if (!dataHandler) return nullptr;
+>>
+>>         // Find mod index
+>>         auto modInfo = dataHandler->LookupModByName(modName.c_str());
+>>         if (!modInfo) return nullptr;
+>>
+>>         std::uint8_t modIndex = modInfo->GetPartialIndex();
+>>
+>>         // Iterate all forms in the mod to find matching EditorID
+>>         for (auto& form : modInfo->forms) {
+>>             if (!form) continue;
+>>
+>>             if (form->GetFormEditorID() && editorID == form->GetFormEditorID()) {
+>>                 return form;
+>>             }
+>>         }
+>>
+>>         return nullptr;
+>>     }
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+PS D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed> namespace SO {
+>>
+>>     // Helper: 2D squared distance between two points
+>>     float GetSquaredDistance2D(const RE::NiPoint3& a, const RE::NiPoint3& b) {
+>>         float dx = a.x - b.x;
+>>         float dy = a.y - b.y;
+>>         return dx * dx + dy * dy;
+>>     }
+>>
+>>     // Function to get a BSLightingShaderProperty from a NiAVObject (geometry node)
+>>     RE::BSLightingShaderProperty* GetLightingShaderProperty(RE::NiAVObject* node) {
+>>         if (!node) return nullptr;
+>>         return node->GetBSLightingShaderProperty();
+>>     }
+>>
+>>     // Function to set a MultiLayer texture on an object's shader property
+>>     void SetMultiLayerTexture(RE::NiAVObject* node, const std::string& texturePath) {
+>>         auto lighting = GetLightingShaderProperty(node);
+>>         if (!lighting) return;
+>>
+>>         auto textureSet = lighting->GetTextureSet();
+>>         if (!textureSet) return;
+>>
+>>         // MultiLayer slot is 7 in Skyrim AE (hardcoded)
+>>         constexpr std::uint32_t multiLayerSlot = 7;
+>>
+>>         // NOTE: GetTexturePath expects BSTextureSet::Texture enum, but it's an enum class with underlying int = slot index.
+>>         // So, cast int to enum explicitly.
+>>         // The enum class is defined like: enum class Texture : UInt32 { kDiffuse = 0, kNormal, ... kMultiLayer = 7, ... };
+>>
+>>         // Cast integer slot to enum
+>>         auto textureEnum = static_cast<RE::BSTextureSet::Texture>(multiLayerSlot);
+>>
+>>         // Update texture path
+>>         textureSet->SetTexturePath(textureEnum, texturePath.c_str());
+>>
+>>         // Mark textures dirty or notify renderer if necessary (not shown here)
+>>     }
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+PS D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed> namespace SO {
+>>
+>>     // Helper: 2D squared distance between two points
+>>     float GetSquaredDistance2D(const RE::NiPoint3& a, const RE::NiPoint3& b) {
+>>         float dx = a.x - b.x;
+>>         float dy = a.y - b.y;
+>>         return dx * dx + dy * dy;
+>>     }
+>>
+>>     // Function to get a BSLightingShaderProperty from a NiAVObject (geometry node)
+>>     RE::BSLightingShaderProperty* GetLightingShaderProperty(RE::NiAVObject* node) {
+>>         if (!node) return nullptr;
+>>         return node->GetBSLightingShaderProperty();
+>>     }
+>>
+>>     // Function to set a MultiLayer texture on an object's shader property
+>>     void SetMultiLayerTexture(RE::NiAVObject* node, const std::string& texturePath) {
+>>         auto lighting = GetLightingShaderProperty(node);
+>>         if (!lighting) return;
+>>
+>>         auto textureSet = lighting->GetTextureSet();
+>>         if (!textureSet) return;
+>>
+>>         // MultiLayer slot is 7 in Skyrim AE (hardcoded)
+>>         constexpr std::uint32_t multiLayerSlot = 7;
+>>
+>>         // NOTE: GetTexturePath expects BSTextureSet::Texture enum, but it's an enum class with underlying int = slot index.
+>>         // So, cast int to enum explicitly.
+>>         // The enum class is defined like: enum class Texture : UInt32 { kDiffuse = 0, kNormal, ... kMultiLayer = 7, ... };
+>>
+>>         // Cast integer slot to enum
+>>         auto textureEnum = static_cast<RE::BSTextureSet::Texture>(multiLayerSlot);
+>>
+>>         // Update texture path
+>>         textureSet->SetTexturePath(textureEnum, texturePath.c_str());
+>>
+>>         // Mark textures dirty or notify renderer if necessary (not shown here)
+>>     }
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+PS D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed> Get-ChildItem -Recurse
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                vcpkg
+d-----        12/07/2025     23:25                x64-windows
+d-----        12/07/2025     23:25                x64-windows-static
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                blds
+d-----        12/07/2025     23:25                info
+d-----        12/07/2025     23:41                pkgs
+d-----        12/07/2025     23:25                updates
+-a----        12/07/2025     23:41            233 compiler-file-hash-cache.json
+-a----        12/07/2025     23:41             90 manifest-info.json
+-a----        12/07/2025     23:25           4059 status
+-a----        12/07/2025     23:25            105 vcpkg-lock.json
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                boost-assert
+d-----        12/07/2025     23:25                boost-config
+d-----        12/07/2025     23:25                boost-static-assert
+d-----        12/07/2025     23:25                boost-stl-interfaces
+d-----        12/07/2025     23:25                boost-type-traits
+d-----        12/07/2025     23:25                boost-uninstall
+d-----        12/07/2025     23:25                boost-vcpkg-helpers
+d-----        12/07/2025     23:41                detect_compiler
+d-----        12/07/2025     23:25                fmt
+d-----        12/07/2025     23:25                rsm-binary-io
+d-----        12/07/2025     23:25                simpleini
+d-----        12/07/2025     23:25                spdlog
+d-----        12/07/2025     23:25                vcpkg-cmake
+d-----        12/07/2025     23:25                vcpkg-cmake-config
+d-----        12/07/2025     23:25                xbyak
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\boost-assert
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41            840 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\boost-config
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41            762 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\boost-static-assert
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41            840 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\boost-stl-interfaces
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41           1001 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\boost-type-traits
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41            925 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\boost-uninstall
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41            605 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\boost-vcpkg-helpers
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41           1102 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                x64-windows-rel
+d-----        12/07/2025     23:41                x64-windows-static-rel
+-a----        12/07/2025     23:41              0 config-x64-windows-err.log
+-a----        12/07/2025     23:41           3161 config-x64-windows-out.log
+-a----        12/07/2025     23:25          20919 config-x64-windows-rel-CMakeCache.txt.log
+-a----        12/07/2025     23:41              0 config-x64-windows-static-err.log
+-a----        12/07/2025     23:41           3182 config-x64-windows-static-out.log
+-a----        12/07/2025     23:25          20960 config-x64-windows-static-rel-CMakeCache.txt.log
+-a----        12/07/2025     23:41           3237 stdout-x64-windows-static.log
+-a----        12/07/2025     23:41           3209 stdout-x64-windows.log
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64-windows-rel
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                CMakeFiles
+d-----        12/07/2025     23:41                vcpkg-parallel-configure
+-a----        12/07/2025     23:41          37783 build.ninja
+-a----        12/07/2025     23:41          20919 CMakeCache.txt
+-a----        12/07/2025     23:41           2208 cmake_install.cmake
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64-windows-rel\CMakeFiles
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                3.31.6-msvc6
+d-----        12/07/2025     23:41                pkgRedirects
+d-----        12/07/2025     23:41                ShowIncludes
+-a----        12/07/2025     23:41             86 cmake.check_cache
+-a----        12/07/2025     23:41           5555 CMakeConfigureLog.yaml
+-a----        12/07/2025     23:41           1952 rules.ninja
+-a----        12/07/2025     23:41            291 TargetDirectories.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64
+    -windows-rel\CMakeFiles\3.31.6-msvc6
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                CompilerIdC
+d-----        12/07/2025     23:41                CompilerIdCXX
+-a----        12/07/2025     23:41           2902 CMakeCCompiler.cmake
+-a----        12/07/2025     23:41           3549 CMakeCXXCompiler.cmake
+-a----        12/07/2025     23:41            276 CMakeRCCompiler.cmake
+-a----        12/07/2025     23:41            497 CMakeSystem.cmake
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64
+    -windows-rel\CMakeFiles\3.31.6-msvc6\CompilerIdC
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                tmp
+-a----        12/07/2025     23:41          28524 CMakeCCompilerId.c
+-a----        12/07/2025     23:41         108032 CMakeCCompilerId.exe
+-a----        12/07/2025     23:41           2031 CMakeCCompilerId.obj
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64
+    -windows-rel\CMakeFiles\3.31.6-msvc6\CompilerIdCXX
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                tmp
+-a----        12/07/2025     23:41          29376 CMakeCXXCompilerId.cpp
+-a----        12/07/2025     23:41         108032 CMakeCXXCompilerId.exe
+-a----        12/07/2025     23:41           2098 CMakeCXXCompilerId.obj
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64
+    -windows-rel\CMakeFiles\ShowIncludes
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41              2 foo.h
+-a----        12/07/2025     23:41             33 main.c
+-a----        12/07/2025     23:41            714 main.obj
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64
+    -windows-rel\vcpkg-parallel-configure
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41             74 .ninja_log
+-a----        12/07/2025     23:41           2225 build.ninja
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64-windows-static-rel
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                CMakeFiles
+d-----        12/07/2025     23:41                vcpkg-parallel-configure
+-a----        12/07/2025     23:41          37818 build.ninja
+-a----        12/07/2025     23:41          20960 CMakeCache.txt
+-a----        12/07/2025     23:41           2229 cmake_install.cmake
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64
+    -windows-static-rel\CMakeFiles
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                3.31.6-msvc6
+d-----        12/07/2025     23:41                pkgRedirects
+d-----        12/07/2025     23:41                ShowIncludes
+-a----        12/07/2025     23:41             86 cmake.check_cache
+-a----        12/07/2025     23:41           5583 CMakeConfigureLog.yaml
+-a----        12/07/2025     23:41           1959 rules.ninja
+-a----        12/07/2025     23:41            305 TargetDirectories.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64
+    -windows-static-rel\CMakeFiles\3.31.6-msvc6
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                CompilerIdC
+d-----        12/07/2025     23:41                CompilerIdCXX
+-a----        12/07/2025     23:41           2902 CMakeCCompiler.cmake
+-a----        12/07/2025     23:41           3549 CMakeCXXCompiler.cmake
+-a----        12/07/2025     23:41            276 CMakeRCCompiler.cmake
+-a----        12/07/2025     23:41            497 CMakeSystem.cmake
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64
+    -windows-static-rel\CMakeFiles\3.31.6-msvc6\CompilerIdC
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                tmp
+-a----        12/07/2025     23:41          28524 CMakeCCompilerId.c
+-a----        12/07/2025     23:41         108032 CMakeCCompilerId.exe
+-a----        12/07/2025     23:41           2039 CMakeCCompilerId.obj
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64
+    -windows-static-rel\CMakeFiles\3.31.6-msvc6\CompilerIdCXX
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:41                tmp
+-a----        12/07/2025     23:41          29376 CMakeCXXCompilerId.cpp
+-a----        12/07/2025     23:41         108032 CMakeCXXCompilerId.exe
+-a----        12/07/2025     23:41           2106 CMakeCXXCompilerId.obj
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64
+    -windows-static-rel\CMakeFiles\ShowIncludes
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41              2 foo.h
+-a----        12/07/2025     23:41             33 main.c
+-a----        12/07/2025     23:41            722 main.obj
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\detect_compiler\x64
+    -windows-static-rel\vcpkg-parallel-configure
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41             74 .ninja_log
+-a----        12/07/2025     23:41           2239 build.ninja
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\fmt
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41           1430 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\rsm-binary-io
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41            923 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\simpleini
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41            677 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\spdlog
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41           1575 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\vcpkg-cmake
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41           1495 x64-windows.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\vcpkg-cmake-config
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41            843 x64-windows.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\blds\xbyak
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:41            838 x64-windows-static.vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\info
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     23:25            549 boost-assert_1.82.0_x64-windows-static.list
+-a----        12/07/2025     23:25          18527 boost-config_1.82.0_x64-windows-static.list
+-a----        12/07/2025     23:25            436 boost-static-assert_1.82.0_x64-windows-static.list
+-a----        12/07/2025     23:25           1108 boost-stl-interfaces_1.82.0_x64-windows-static.list
+-a----        12/07/2025     23:25          13679 boost-type-traits_1.82.0_x64-windows-static.list
+-a----        12/07/2025     23:25            294 boost-uninstall_1.82.0_x64-windows-static.list
+-a----        12/07/2025     23:25            463 boost-vcpkg-helpers_1.82.0_x64-windows-static.list
+-a----        12/07/2025     23:25           1380 fmt_10.0.0_x64-windows-static.list
+-a----        12/07/2025     23:25           1135 rsm-binary-io_2.0.5_x64-windows-static.list
+-a----        12/07/2025     23:25            379 simpleini_4.19_x64-windows-static.list
+-a----        12/07/2025     23:25           5717 spdlog_1.11.0_x64-windows-static.list
+-a----        12/07/2025     23:25            355 vcpkg-cmake-config_2022-02-06_x64-windows.list
+-a----        12/07/2025     23:25            420 vcpkg-cmake_2023-05-04_x64-windows.list
+-a----        12/07/2025     23:25            623 xbyak_6.69_x64-windows-static.list
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                boost-assert_x64-windows-static
+d-----        12/07/2025     23:25                boost-config_x64-windows-static
+d-----        12/07/2025     23:25                boost-static-assert_x64-windows-static
+d-----        12/07/2025     23:25                boost-stl-interfaces_x64-windows-static
+d-----        12/07/2025     23:25                boost-type-traits_x64-windows-static
+d-----        12/07/2025     23:25                boost-uninstall_x64-windows-static
+d-----        12/07/2025     23:25                boost-vcpkg-helpers_x64-windows-static
+d-----        12/07/2025     23:41                detect_compiler_x64-windows
+d-----        12/07/2025     23:41                detect_compiler_x64-windows-static
+d-----        12/07/2025     23:25                fmt_x64-windows-static
+d-----        12/07/2025     23:25                rsm-binary-io_x64-windows-static
+d-----        12/07/2025     23:25                simpleini_x64-windows-static
+d-----        12/07/2025     23:25                spdlog_x64-windows-static
+d-----        12/07/2025     23:25                vcpkg-cmake-config_x64-windows
+d-----        12/07/2025     23:25                vcpkg-cmake_x64-windows
+d-----        12/07/2025     23:25                xbyak_x64-windows-static
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-assert_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                include
+d-----        12/07/2025     05:42                share
+-a----        12/07/2025     05:42             44 BUILD_INFO
+-a----        12/07/2025     05:42            250 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-assert_x64-windows-static\include
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-assert_x64-windows-static\include\boost
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                assert
+-a----        03/03/2023     16:15           2625 assert.hpp
+-a----        03/03/2023     16:15           1681 current_function.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-assert_x64-wi
+    ndows-static\include\boost\assert
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        03/03/2023     16:15           5584 source_location.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-assert_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost-assert
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-assert_x64-wi
+    ndows-static\share\boost-assert
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42           1338 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           3724 vcpkg.spdx.json
+-a----        12/07/2025     05:42            840 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                include
+d-----        12/07/2025     05:42                share
+-a----        12/07/2025     05:42             44 BUILD_INFO
+-a----        12/07/2025     05:42            236 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-windows-static\include
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-windows-static\include\boost
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                config
+d-----        12/07/2025     05:42                detail
+-a----        22/02/2023     21:08           2216 config.hpp
+-a----        22/02/2023     21:08          18497 cstdint.hpp
+-a----        22/02/2023     21:08           4160 cxx11_char_types.hpp
+-a----        22/02/2023     21:08           6362 limits.hpp
+-a----        22/02/2023     21:08           1117 version.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\include\boost\config
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                abi
+d-----        12/07/2025     05:42                compiler
+d-----        12/07/2025     05:42                detail
+d-----        12/07/2025     05:42                no_tr1
+d-----        12/07/2025     05:42                platform
+d-----        12/07/2025     05:42                stdlib
+-a----        22/02/2023     21:08            700 abi_prefix.hpp
+-a----        22/02/2023     21:08            781 abi_suffix.hpp
+-a----        22/02/2023     21:08          11405 assert_cxx03.hpp
+-a----        22/02/2023     21:08          11520 assert_cxx11.hpp
+-a----        22/02/2023     21:08           2396 assert_cxx14.hpp
+-a----        22/02/2023     21:08           3174 assert_cxx17.hpp
+-a----        22/02/2023     21:08           2948 assert_cxx20.hpp
+-a----        22/02/2023     21:08            989 assert_cxx98.hpp
+-a----        22/02/2023     21:08          17829 auto_link.hpp
+-a----        22/02/2023     21:08            848 header_deprecated.hpp
+-a----        22/02/2023     21:08           1120 helper_macros.hpp
+-a----        22/02/2023     21:08           1019 pragma_message.hpp
+-a----        22/02/2023     21:08           3509 requires_threads.hpp
+-a----        12/07/2025     05:42           5456 user.hpp
+-a----        22/02/2023     21:08           1820 warning_disable.hpp
+-a----        22/02/2023     21:08           8171 workaround.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\include\boost\config\abi
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08           1002 borland_prefix.hpp
+-a----        22/02/2023     21:08            280 borland_suffix.hpp
+-a----        22/02/2023     21:08            819 msvc_prefix.hpp
+-a----        22/02/2023     21:08            252 msvc_suffix.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\include\boost\config\compiler
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08          10760 borland.hpp
+-a----        22/02/2023     21:08          10085 clang.hpp
+-a----        22/02/2023     21:08           2305 clang_version.hpp
+-a----        22/02/2023     21:08          11602 codegear.hpp
+-a----        22/02/2023     21:08           1638 comeau.hpp
+-a----        22/02/2023     21:08           6038 common_edg.hpp
+-a----        22/02/2023     21:08            501 compaq_cxx.hpp
+-a----        22/02/2023     21:08          15493 cray.hpp
+-a----        22/02/2023     21:08            909 diab.hpp
+-a----        22/02/2023     21:08           4626 digitalmars.hpp
+-a----        22/02/2023     21:08          12427 gcc.hpp
+-a----        22/02/2023     21:08           4078 gcc_xml.hpp
+-a----        22/02/2023     21:08            822 greenhills.hpp
+-a----        22/02/2023     21:08           5000 hp_acc.hpp
+-a----        22/02/2023     21:08          22537 intel.hpp
+-a----        22/02/2023     21:08           1030 kai.hpp
+-a----        22/02/2023     21:08           6408 metrowerks.hpp
+-a----        22/02/2023     21:08           4811 mpw.hpp
+-a----        22/02/2023     21:08           2095 nvcc.hpp
+-a----        22/02/2023     21:08           5156 pathscale.hpp
+-a----        22/02/2023     21:08            770 pgi.hpp
+-a----        22/02/2023     21:08            774 sgi_mipspro.hpp
+-a----        22/02/2023     21:08           7705 sunpro_cc.hpp
+-a----        22/02/2023     21:08           6149 vacpp.hpp
+-a----        22/02/2023     21:08          12588 visualc.hpp
+-a----        22/02/2023     21:08           8202 xlcpp.hpp
+-a----        22/02/2023     21:08           4984 xlcpp_zos.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\include\boost\config\detail
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08           8629 cxx_composite.hpp
+-a----        22/02/2023     21:08           3736 posix_features.hpp
+-a----        22/02/2023     21:08           5356 select_compiler_config.hpp
+-a----        22/02/2023     21:08           4588 select_platform_config.hpp
+-a----        22/02/2023     21:08           4653 select_stdlib_config.hpp
+-a----        22/02/2023     21:08          46059 suffix.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\include\boost\config\no_tr1
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08            838 cmath.hpp
+-a----        22/02/2023     21:08            854 complex.hpp
+-a----        22/02/2023     21:08            878 functional.hpp
+-a----        22/02/2023     21:08            846 memory.hpp
+-a----        22/02/2023     21:08            854 utility.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\include\boost\config\platform
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08            888 aix.hpp
+-a----        22/02/2023     21:08            442 amigaos.hpp
+-a----        22/02/2023     21:08            600 beos.hpp
+-a----        22/02/2023     21:08           2592 bsd.hpp
+-a----        22/02/2023     21:08            530 cloudabi.hpp
+-a----        22/02/2023     21:08            456 cray.hpp
+-a----        22/02/2023     21:08           1872 cygwin.hpp
+-a----        22/02/2023     21:08            807 haiku.hpp
+-a----        22/02/2023     21:08           2484 hpux.hpp
+-a----        22/02/2023     21:08            796 irix.hpp
+-a----        22/02/2023     21:08           2850 linux.hpp
+-a----        22/02/2023     21:08           2350 macos.hpp
+-a----        22/02/2023     21:08            773 qnxnto.hpp
+-a----        22/02/2023     21:08            841 solaris.hpp
+-a----        22/02/2023     21:08           2621 symbian.hpp
+-a----        22/02/2023     21:08            749 vms.hpp
+-a----        22/02/2023     21:08          14836 vxworks.hpp
+-a----        22/02/2023     21:08            578 wasm.hpp
+-a----        22/02/2023     21:08           2718 win32.hpp
+-a----        22/02/2023     21:08            789 zos.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\include\boost\config\stdlib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08          11403 dinkumware.hpp
+-a----        22/02/2023     21:08           2830 libcomo.hpp
+-a----        22/02/2023     21:08           5867 libcpp.hpp
+-a----        22/02/2023     21:08          15824 libstdcpp3.hpp
+-a----        22/02/2023     21:08           2235 modena.hpp
+-a----        22/02/2023     21:08           2836 msl.hpp
+-a----        22/02/2023     21:08           6260 roguewave.hpp
+-a----        22/02/2023     21:08           5061 sgi.hpp
+-a----        22/02/2023     21:08           8585 stlport.hpp
+-a----        22/02/2023     21:08           2394 vacpp.hpp
+-a----        22/02/2023     21:08           1963 xlcpp_zos.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\include\boost\detail
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08            353 workaround.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost-config
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\share\boost-config
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                checks
+-a----        12/07/2025     05:42           1338 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           3724 vcpkg.spdx.json
+-a----        12/07/2025     05:42            762 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\share\boost-config\checks
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                architecture
+d-----        12/07/2025     05:42                std
+-a----        22/02/2023     21:08            491 config.jam
+-a----        22/02/2023     21:08          36764 Jamfile.v2
+-a----        22/02/2023     21:08          36893 test_case.cpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\share\boost-config\checks\architecture
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08              4 .gitignore
+-a----        22/02/2023     21:08            248 32.cpp
+-a----        22/02/2023     21:08            248 64.cpp
+-a----        22/02/2023     21:08            427 arm.cpp
+-a----        22/02/2023     21:08            934 combined.cpp
+-a----        22/02/2023     21:08            722 Jamfile.jam
+-a----        22/02/2023     21:08            307 mips.cpp
+-a----        22/02/2023     21:08            485 power.cpp
+-a----        22/02/2023     21:08            254 riscv.cpp
+-a----        22/02/2023     21:08            263 s390x.cpp
+-a----        22/02/2023     21:08            284 sparc.cpp
+-a----        22/02/2023     21:08            634 x86.cpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-config_x64-wi
+    ndows-static\share\boost-config\checks\std
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08            749 cpp_aggregate_bases_17.cpp
+-a----        22/02/2023     21:08            749 cpp_aggregate_nsdmi_14.cpp
+-a----        22/02/2023     21:08            749 cpp_alias_templates_11.cpp
+-a----        22/02/2023     21:08            733 cpp_aligned_new_17.cpp
+-a----        22/02/2023     21:08            729 cpp_attributes_11.cpp
+-a----        22/02/2023     21:08            749 cpp_binary_literals_14.cpp
+-a----        22/02/2023     21:08            757 cpp_capture_star_this_17.cpp
+-a----        22/02/2023     21:08            717 cpp_char8_t_20.cpp
+-a----        22/02/2023     21:08            769 cpp_conditional_explicit_20.cpp
+-a----        22/02/2023     21:08            725 cpp_constexpr_11.cpp
+-a----        22/02/2023     21:08            725 cpp_constexpr_14.cpp
+-a----        22/02/2023     21:08            725 cpp_constexpr_17.cpp
+-a----        22/02/2023     21:08            721 cpp_decltype_11.cpp
+-a----        22/02/2023     21:08            741 cpp_decltype_auto_14.cpp
+-a----        22/02/2023     21:08            753 cpp_deduction_guides_17.cpp
+-a----        22/02/2023     21:08            781 cpp_delegating_constructors_11.cpp
+-a----        22/02/2023     21:08            773 cpp_enumerator_attributes_17.cpp
+-a----        22/02/2023     21:08            729 cpp_exceptions_03.cpp
+-a----        22/02/2023     21:08            765 cpp_explicit_conversion_11.cpp
+-a----        22/02/2023     21:08            753 cpp_fold_expressions_17.cpp
+-a----        22/02/2023     21:08            749 cpp_generic_lambdas_14.cpp
+-a----        22/02/2023     21:08            781 cpp_guaranteed_copy_elision_17.cpp
+-a----        22/02/2023     21:08            725 cpp_hex_float_17.cpp
+-a----        22/02/2023     21:08            737 cpp_if_constexpr_17.cpp
+-a----        22/02/2023     21:08            777 cpp_impl_destroying_delete_20.cpp
+-a----        22/02/2023     21:08            789 cpp_impl_three_way_comparison_20.cpp
+-a----        22/02/2023     21:08            781 cpp_inheriting_constructors_11.cpp
+-a----        22/02/2023     21:08            781 cpp_inheriting_constructors_17.cpp
+-a----        22/02/2023     21:08            757 cpp_initializer_lists_11.cpp
+-a----        22/02/2023     21:08            741 cpp_init_captures_14.cpp
+-a----        22/02/2023     21:08            753 cpp_inline_variables_17.cpp
+-a----        22/02/2023     21:08            717 cpp_lambdas_11.cpp
+-a----        22/02/2023     21:08            800 cpp_lib_addressof_constexpr_17.cpp
+-a----        22/02/2023     21:08            852 cpp_lib_allocator_traits_is_always_equal_17.cpp
+-a----        22/02/2023     21:08            733 cpp_lib_any_17.cpp
+-a----        22/02/2023     21:08            743 cpp_lib_apply_17.cpp
+-a----        22/02/2023     21:08            786 cpp_lib_array_constexpr_17.cpp
+-a----        22/02/2023     21:08            757 cpp_lib_as_const_17.cpp
+-a----        22/02/2023     21:08            828 cpp_lib_atomic_is_always_lock_free_17.cpp
+-a----        22/02/2023     21:08            764 cpp_lib_atomic_ref_20.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_bind_front_20.cpp
+-a----        22/02/2023     21:08            753 cpp_lib_bit_cast_20.cpp
+-a----        22/02/2023     21:08            781 cpp_lib_bool_constant_17.cpp
+-a----        22/02/2023     21:08            808 cpp_lib_boyer_moore_searcher_17.cpp
+-a----        22/02/2023     21:08            741 cpp_lib_byte_17.cpp
+-a----        22/02/2023     21:08            752 cpp_lib_char8_t_20.cpp
+-a----        22/02/2023     21:08            748 cpp_lib_chrono_17.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_chrono_udls_14.cpp
+-a----        22/02/2023     21:08            747 cpp_lib_clamp_17.cpp
+-a----        22/02/2023     21:08            773 cpp_lib_complex_udls_14.cpp
+-a----        22/02/2023     21:08            758 cpp_lib_concepts_20.cpp
+-a----        22/02/2023     21:08            779 cpp_lib_constexpr_misc_20.cpp
+-a----        22/02/2023     21:08            827 cpp_lib_constexpr_swap_algorithms_20.cpp
+-a----        22/02/2023     21:08            789 cpp_lib_destroying_delete_20.cpp
+-a----        22/02/2023     21:08            816 cpp_lib_enable_shared_from_this_17.cpp
+-a----        22/02/2023     21:08            756 cpp_lib_erase_if_20.cpp
+-a----        22/02/2023     21:08            793 cpp_lib_exchange_function_14.cpp
+-a----        22/02/2023     21:08            763 cpp_lib_execution_17.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_filesystem_17.cpp
+-a----        22/02/2023     21:08            753 cpp_lib_gcd_lcm_17.cpp
+-a----        22/02/2023     21:08            825 cpp_lib_generic_associative_lookup_14.cpp
+-a----        22/02/2023     21:08            827 cpp_lib_generic_unordered_lookup_20.cpp
+-a----        22/02/2023     21:08            825 cpp_lib_hardware_interference_size_17.cpp
+-a----        22/02/2023     21:08            861 cpp_lib_has_unique_object_representations_17.cpp
+-a----        22/02/2023     21:08            743 cpp_lib_hypot_17.cpp
+-a----        22/02/2023     21:08            846 cpp_lib_incomplete_container_elements_17.cpp
+-a----        22/02/2023     21:08            789 cpp_lib_integer_sequence_14.cpp
+-a----        22/02/2023     21:08            833 cpp_lib_integral_constant_callable_14.cpp
+-a----        22/02/2023     21:08            752 cpp_lib_invoke_17.cpp
+-a----        22/02/2023     21:08            777 cpp_lib_is_aggregate_17.cpp
+-a----        22/02/2023     21:08            813 cpp_lib_is_constant_evaluated_20.cpp
+-a----        22/02/2023     21:08            761 cpp_lib_is_final_14.cpp
+-a----        22/02/2023     21:08            777 cpp_lib_is_invocable_17.cpp
+-a----        22/02/2023     21:08            789 cpp_lib_is_null_pointer_14.cpp
+-a----        22/02/2023     21:08            777 cpp_lib_is_swappable_17.cpp
+-a----        22/02/2023     21:08            749 cpp_lib_launder_17.cpp
+-a----        22/02/2023     21:08            822 cpp_lib_list_remove_return_type_20.cpp
+-a----        22/02/2023     21:08            785 cpp_lib_logical_traits_17.cpp
+-a----        22/02/2023     21:08            783 cpp_lib_make_from_tuple_17.cpp
+-a----        22/02/2023     21:08            810 cpp_lib_make_reverse_iterator_14.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_make_unique_14.cpp
+-a----        22/02/2023     21:08            781 cpp_lib_map_try_emplace_17.cpp
+-a----        22/02/2023     21:08            811 cpp_lib_math_special_functions_17.cpp
+-a----        22/02/2023     21:08            793 cpp_lib_memory_resource_17.cpp
+-a----        22/02/2023     21:08            769 cpp_lib_node_extract_17.cpp
+-a----        22/02/2023     21:08            830 cpp_lib_nonmember_container_access_17.cpp
+-a----        22/02/2023     21:08            752 cpp_lib_not_fn_17.cpp
+-a----        22/02/2023     21:08            782 cpp_lib_null_iterators_14.cpp
+-a----        22/02/2023     21:08            758 cpp_lib_optional_17.cpp
+-a----        22/02/2023     21:08            799 cpp_lib_parallel_algorithm_17.cpp
+-a----        22/02/2023     21:08            789 cpp_lib_quoted_string_io_14.cpp
+-a----        22/02/2023     21:08            751 cpp_lib_ranges_20.cpp
+-a----        22/02/2023     21:08            808 cpp_lib_raw_memory_algorithms_17.cpp
+-a----        22/02/2023     21:08            792 cpp_lib_result_of_sfinae_14.cpp
+-a----        22/02/2023     21:08            835 cpp_lib_robust_nonmodifying_seq_ops_14.cpp
+-a----        22/02/2023     21:08            751 cpp_lib_sample_17.cpp
+-a----        22/02/2023     21:08            767 cpp_lib_scoped_lock_17.cpp
+-a----        22/02/2023     21:08            778 cpp_lib_shared_mutex_17.cpp
+-a----        22/02/2023     21:08            792 cpp_lib_shared_ptr_arrays_17.cpp
+-a----        22/02/2023     21:08            804 cpp_lib_shared_ptr_weak_type_17.cpp
+-a----        22/02/2023     21:08            802 cpp_lib_shared_timed_mutex_14.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_string_udls_14.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_string_view_17.cpp
+-a----        22/02/2023     21:08            805 cpp_lib_three_way_comparison_20.cpp
+-a----        22/02/2023     21:08            757 cpp_lib_to_chars_17.cpp
+-a----        22/02/2023     21:08            841 cpp_lib_transformation_trait_aliases_14.cpp
+-a----        22/02/2023     21:08            812 cpp_lib_transparent_operators_14.cpp
+-a----        22/02/2023     21:08            808 cpp_lib_transparent_operators_17.cpp
+-a----        22/02/2023     21:08            781 cpp_lib_tuples_by_type_14.cpp
+-a----        22/02/2023     21:08            783 cpp_lib_tuple_element_t_14.cpp
+-a----        22/02/2023     21:08            845 cpp_lib_type_trait_variable_templates_17.cpp
+-a----        22/02/2023     21:08            803 cpp_lib_uncaught_exceptions_17.cpp
+-a----        22/02/2023     21:08            831 cpp_lib_unordered_map_try_emplace_17.cpp
+-a----        22/02/2023     21:08            753 cpp_lib_variant_17.cpp
+-a----        22/02/2023     21:08            753 cpp_lib_void_t_17.cpp
+-a----        22/02/2023     21:08            769 cpp_namespace_attributes_17.cpp
+-a----        22/02/2023     21:08            777 cpp_noexcept_function_type_17.cpp
+-a----        22/02/2023     21:08            773 cpp_nontype_template_args_17.cpp
+-a----        22/02/2023     21:08            813 cpp_nontype_template_parameter_auto_17.cpp
+-a----        22/02/2023     21:08            817 cpp_nontype_template_parameter_class_20.cpp
+-a----        22/02/2023     21:08            709 cpp_nsdmi_11.cpp
+-a----        22/02/2023     21:08            749 cpp_range_based_for_11.cpp
+-a----        22/02/2023     21:08            749 cpp_range_based_for_17.cpp
+-a----        22/02/2023     21:08            733 cpp_raw_strings_11.cpp
+-a----        22/02/2023     21:08            745 cpp_ref_qualifiers_11.cpp
+-a----        22/02/2023     21:08            773 cpp_return_type_deduction_14.cpp
+-a----        22/02/2023     21:08            705 cpp_rtti_03.cpp
+-a----        22/02/2023     21:08            757 cpp_rvalue_references_11.cpp
+-a----        22/02/2023     21:08            761 cpp_sized_deallocation_14.cpp
+-a----        22/02/2023     21:08            741 cpp_static_assert_11.cpp
+-a----        22/02/2023     21:08            741 cpp_static_assert_17.cpp
+-a----        22/02/2023     21:08            765 cpp_structured_bindings_17.cpp
+-a----        22/02/2023     21:08            777 cpp_template_template_args_17.cpp
+-a----        22/02/2023     21:08            777 cpp_threadsafe_static_init_11.cpp
+-a----        22/02/2023     21:08            761 cpp_unicode_characters_11.cpp
+-a----        22/02/2023     21:08            753 cpp_unicode_literals_11.cpp
+-a----        22/02/2023     21:08            773 cpp_user_defined_literals_11.cpp
+-a----        22/02/2023     21:08            761 cpp_variable_templates_14.cpp
+-a----        22/02/2023     21:08            761 cpp_variadic_templates_11.cpp
+-a----        22/02/2023     21:08            745 cpp_variadic_using_17.cpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-static-assert_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                include
+d-----        12/07/2025     05:42                share
+-a----        12/07/2025     05:42             44 BUILD_INFO
+-a----        12/07/2025     05:42            264 CONTROL
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-static-assert
+    _x64-windows-static\include
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-static-assert
+    _x64-windows-static\include\boost
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        13/10/2021     17:03           7260 static_assert.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-static-assert_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost-static-assert
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-static-assert
+    _x64-windows-static\share\boost-static-assert
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42           1338 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           3780 vcpkg.spdx.json
+-a----        12/07/2025     05:42            840 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-stl-interfaces_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                include
+d-----        12/07/2025     05:42                share
+-a----        12/07/2025     05:42             44 BUILD_INFO
+-a----        12/07/2025     05:42            299 CONTROL
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-stl-interface
+    s_x64-windows-static\include
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-stl-interface
+    s_x64-windows-static\include\boost
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                stl_interfaces
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-stl-interface
+    s_x64-windows-static\include\boost\stl_interfaces
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                detail
+-a----        19/11/2022     03:54           1234 config.hpp
+-a----        19/11/2022     03:54           3065 fwd.hpp
+-a----        19/11/2022     03:54          34026 iterator_interface.hpp
+-a----        19/11/2022     03:54           6477 reverse_iterator.hpp
+-a----        19/11/2022     03:54          40360 sequence_container_interface.hpp
+-a----        19/11/2022     03:54          10237 view_adaptor.hpp
+-a----        19/11/2022     03:54           7748 view_interface.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-stl-interface
+    s_x64-windows-static\include\boost\stl_interfaces\detail
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        19/11/2022     03:54           4452 pipeable_view.hpp
+-a----        19/11/2022     03:54           3417 view_closure.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-stl-interfaces_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost-stl-interfaces
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-stl-interface
+    s_x64-windows-static\share\boost-stl-interfaces
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42           1338 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           3788 vcpkg.spdx.json
+-a----        12/07/2025     05:42           1001 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-type-traits_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                include
+d-----        12/07/2025     05:42                share
+-a----        12/07/2025     05:42             44 BUILD_INFO
+-a----        12/07/2025     05:42            281 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-type-traits_x64-windows-static\include
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-type-traits_x
+    64-windows-static\include\boost
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                type_traits
+d-----        12/07/2025     05:42                utility
+-a----        24/02/2023     20:02            653 aligned_storage.hpp
+-a----        24/02/2023     20:02           7533 type_traits.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-type-traits_x
+    64-windows-static\include\boost\type_traits
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                detail
+-a----        24/02/2023     20:02           1439 add_const.hpp
+-a----        24/02/2023     20:02           1399 add_cv.hpp
+-a----        24/02/2023     20:02            768 add_lvalue_reference.hpp
+-a----        24/02/2023     20:02           1505 add_pointer.hpp
+-a----        24/02/2023     20:02           1709 add_reference.hpp
+-a----        24/02/2023     20:02           2395 add_rvalue_reference.hpp
+-a----        24/02/2023     20:02           1424 add_volatile.hpp
+-a----        24/02/2023     20:02           3350 aligned_storage.hpp
+-a----        24/02/2023     20:02           3575 alignment_of.hpp
+-a----        24/02/2023     20:02            573 alignment_traits.hpp
+-a----        24/02/2023     20:02            862 arithmetic_traits.hpp
+-a----        24/02/2023     20:02            569 array_traits.hpp
+-a----        24/02/2023     20:02            724 broken_compiler_spec.hpp
+-a----        24/02/2023     20:02           4555 common_type.hpp
+-a----        24/02/2023     20:02           1001 composite_traits.hpp
+-a----        24/02/2023     20:02            843 conditional.hpp
+-a----        24/02/2023     20:02            708 config.hpp
+-a----        24/02/2023     20:02            889 conjunction.hpp
+-a----        24/02/2023     20:02            658 conversion_traits.hpp
+-a----        24/02/2023     20:02           1058 copy_cv.hpp
+-a----        24/02/2023     20:02            790 copy_cv_ref.hpp
+-a----        24/02/2023     20:02           1044 copy_reference.hpp
+-a----        24/02/2023     20:02            994 cv_traits.hpp
+-a----        24/02/2023     20:02           1496 decay.hpp
+-a----        24/02/2023     20:02           1899 declval.hpp
+-a----        24/02/2023     20:02            569 detected.hpp
+-a----        24/02/2023     20:02            670 detected_or.hpp
+-a----        24/02/2023     20:02            891 disjunction.hpp
+-a----        24/02/2023     20:02            829 enable_if.hpp
+-a----        24/02/2023     20:02           3751 extent.hpp
+-a----        24/02/2023     20:02           1071 floating_point_promotion.hpp
+-a----        24/02/2023     20:02           4801 function_traits.hpp
+-a----        24/02/2023     20:02           1572 has_bit_and.hpp
+-a----        24/02/2023     20:02           1841 has_bit_and_assign.hpp
+-a----        24/02/2023     20:02           1569 has_bit_or.hpp
+-a----        24/02/2023     20:02           1839 has_bit_or_assign.hpp
+-a----        24/02/2023     20:02           1571 has_bit_xor.hpp
+-a----        24/02/2023     20:02           1842 has_bit_xor_assign.hpp
+-a----        24/02/2023     20:02            936 has_complement.hpp
+-a----        24/02/2023     20:02          16135 has_dereference.hpp
+-a----        24/02/2023     20:02           1156 has_divides.hpp
+-a----        24/02/2023     20:02           1513 has_divides_assign.hpp
+-a----        24/02/2023     20:02           1762 has_equal_to.hpp
+-a----        24/02/2023     20:02           1756 has_greater.hpp
+-a----        24/02/2023     20:02           1775 has_greater_equal.hpp
+-a----        24/02/2023     20:02           1581 has_left_shift.hpp
+-a----        24/02/2023     20:02           1851 has_left_shift_assign.hpp
+-a----        24/02/2023     20:02           1750 has_less.hpp
+-a----        24/02/2023     20:02           1769 has_less_equal.hpp
+-a----        24/02/2023     20:02           1212 has_logical_and.hpp
+-a----        24/02/2023     20:02            998 has_logical_not.hpp
+-a----        24/02/2023     20:02           1208 has_logical_or.hpp
+-a----        24/02/2023     20:02           6520 has_minus.hpp
+-a----        24/02/2023     20:02           6809 has_minus_assign.hpp
+-a----        24/02/2023     20:02           1570 has_modulus.hpp
+-a----        24/02/2023     20:02           1841 has_modulus_assign.hpp
+-a----        24/02/2023     20:02           1162 has_multiplies.hpp
+-a----        24/02/2023     20:02           1521 has_multiplies_assign.hpp
+-a----        24/02/2023     20:02            731 has_negate.hpp
+-a----        24/02/2023     20:02           5166 has_new_operator.hpp
+-a----        24/02/2023     20:02           3766 has_nothrow_assign.hpp
+-a----        24/02/2023     20:02           2633 has_nothrow_constructor.hpp
+-a----        24/02/2023     20:02           3047 has_nothrow_copy.hpp
+-a----        24/02/2023     20:02           2204 has_nothrow_destructor.hpp
+-a----        24/02/2023     20:02           1774 has_not_equal_to.hpp
+-a----        24/02/2023     20:02           2282 has_operator.hpp
+-a----        24/02/2023     20:02           1800 has_plus.hpp
+-a----        24/02/2023     20:02           6891 has_plus_assign.hpp
+-a----        24/02/2023     20:02           1932 has_post_decrement.hpp
+-a----        24/02/2023     20:02           1932 has_post_increment.hpp
+-a----        24/02/2023     20:02           1922 has_pre_decrement.hpp
+-a----        24/02/2023     20:02           1923 has_pre_increment.hpp
+-a----        24/02/2023     20:02           1584 has_right_shift.hpp
+-a----        24/02/2023     20:02           1854 has_right_shift_assign.hpp
+-a----        24/02/2023     20:02           2208 has_trivial_assign.hpp
+-a----        24/02/2023     20:02           2233 has_trivial_constructor.hpp
+-a----        24/02/2023     20:02           2417 has_trivial_copy.hpp
+-a----        24/02/2023     20:02           1683 has_trivial_destructor.hpp
+-a----        24/02/2023     20:02           2666 has_trivial_move_assign.hpp
+-a----        24/02/2023     20:02           2939 has_trivial_move_constructor.hpp
+-a----        24/02/2023     20:02            746 has_unary_minus.hpp
+-a----        24/02/2023     20:02            690 has_unary_plus.hpp
+-a----        24/02/2023     20:02            901 has_virtual_destructor.hpp
+-a----        24/02/2023     20:02            768 ice.hpp
+-a----        24/02/2023     20:02           2546 integral_constant.hpp
+-a----        24/02/2023     20:02           6268 integral_promotion.hpp
+-a----        24/02/2023     20:02          23311 intrinsics.hpp
+-a----        24/02/2023     20:02           4501 is_abstract.hpp
+-a----        24/02/2023     20:02            778 is_arithmetic.hpp
+-a----        24/02/2023     20:02           1755 is_array.hpp
+-a----        24/02/2023     20:02           3925 is_assignable.hpp
+-a----        24/02/2023     20:02           7997 is_base_and_derived.hpp
+-a----        24/02/2023     20:02           1500 is_base_of.hpp
+-a----        24/02/2023     20:02           1486 is_base_of_tr1.hpp
+-a----        24/02/2023     20:02            912 is_bounded_array.hpp
+-a----        24/02/2023     20:02           3595 is_class.hpp
+-a----        24/02/2023     20:02           2825 is_complete.hpp
+-a----        24/02/2023     20:02            952 is_complex.hpp
+-a----        24/02/2023     20:02            848 is_compound.hpp
+-a----        24/02/2023     20:02           1630 is_const.hpp
+-a----        24/02/2023     20:02           4350 is_constructible.hpp
+-a----        24/02/2023     20:02          18654 is_convertible.hpp
+-a----        24/02/2023     20:02           4904 is_copy_assignable.hpp
+-a----        24/02/2023     20:02           6813 is_copy_constructible.hpp
+-a----        24/02/2023     20:02           4526 is_default_constructible.hpp
+-a----        24/02/2023     20:02           2572 is_destructible.hpp
+-a----        24/02/2023     20:02            752 is_detected.hpp
+-a----        24/02/2023     20:02            815 is_detected_convertible.hpp
+-a----        24/02/2023     20:02            796 is_detected_exact.hpp
+-a----        24/02/2023     20:02           3005 is_empty.hpp
+-a----        24/02/2023     20:02           4996 is_enum.hpp
+-a----        24/02/2023     20:02            868 is_final.hpp
+-a----        24/02/2023     20:02            789 is_float.hpp
+-a----        24/02/2023     20:02           1374 is_floating_point.hpp
+-a----        24/02/2023     20:02            807 is_function.hpp
+-a----        24/02/2023     20:02            996 is_fundamental.hpp
+-a----        24/02/2023     20:02           3968 is_integral.hpp
+-a----        24/02/2023     20:02           1746 is_list_constructible.hpp
+-a----        24/02/2023     20:02           2012 is_lvalue_reference.hpp
+-a----        24/02/2023     20:02            824 is_member_function_pointer.hpp
+-a----        24/02/2023     20:02            839 is_member_object_pointer.hpp
+-a----        24/02/2023     20:02           1969 is_member_pointer.hpp
+-a----        24/02/2023     20:02           1067 is_noncopyable.hpp
+-a----        24/02/2023     20:02           3964 is_nothrow_move_assignable.hpp
+-a----        24/02/2023     20:02           4043 is_nothrow_move_constructible.hpp
+-a----        24/02/2023     20:02           1444 is_nothrow_swappable.hpp
+-a----        24/02/2023     20:02            907 is_object.hpp
+-a----        24/02/2023     20:02           1809 is_pod.hpp
+-a----        24/02/2023     20:02           1901 is_pointer.hpp
+-a----        24/02/2023     20:02           3187 is_polymorphic.hpp
+-a----        24/02/2023     20:02            938 is_reference.hpp
+-a----        24/02/2023     20:02            981 is_rvalue_reference.hpp
+-a----        24/02/2023     20:02           1511 is_same.hpp
+-a----        24/02/2023     20:02            966 is_scalar.hpp
+-a----        24/02/2023     20:02            640 is_scoped_enum.hpp
+-a----        24/02/2023     20:02           6652 is_signed.hpp
+-a----        24/02/2023     20:02           1127 is_stateless.hpp
+-a----        24/02/2023     20:02           3341 is_swappable.hpp
+-a----        24/02/2023     20:02            927 is_trivially_copyable.hpp
+-a----        24/02/2023     20:02            843 is_unbounded_array.hpp
+-a----        24/02/2023     20:02           1075 is_union.hpp
+-a----        24/02/2023     20:02            593 is_unscoped_enum.hpp
+-a----        24/02/2023     20:02           6772 is_unsigned.hpp
+-a----        24/02/2023     20:02           6146 is_virtual_base_of.hpp
+-a----        24/02/2023     20:02            890 is_void.hpp
+-a----        24/02/2023     20:02           1665 is_volatile.hpp
+-a----        24/02/2023     20:02           4621 make_signed.hpp
+-a----        24/02/2023     20:02           4691 make_unsigned.hpp
+-a----        24/02/2023     20:02           1052 make_void.hpp
+-a----        24/02/2023     20:02            472 negation.hpp
+-a----        24/02/2023     20:02            702 nonesuch.hpp
+-a----        24/02/2023     20:02           1441 object_traits.hpp
+-a----        24/02/2023     20:02            755 promote.hpp
+-a----        24/02/2023     20:02           2585 rank.hpp
+-a----        24/02/2023     20:02            590 reference_traits.hpp
+-a----        24/02/2023     20:02           1885 remove_all_extents.hpp
+-a----        24/02/2023     20:02            802 remove_bounds.hpp
+-a----        24/02/2023     20:02           1359 remove_const.hpp
+-a----        24/02/2023     20:02           1794 remove_cv.hpp
+-a----        24/02/2023     20:02            859 remove_cv_ref.hpp
+-a----        24/02/2023     20:02           1791 remove_extent.hpp
+-a----        24/02/2023     20:02           2203 remove_pointer.hpp
+-a----        24/02/2023     20:02           1783 remove_reference.hpp
+-a----        24/02/2023     20:02           1398 remove_volatile.hpp
+-a----        24/02/2023     20:02            586 same_traits.hpp
+-a----        24/02/2023     20:02            893 transform_traits.hpp
+-a----        24/02/2023     20:02            636 type_identity.hpp
+-a----        24/02/2023     20:02          10036 type_with_alignment.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-type-traits_x
+    64-windows-static\include\boost\type_traits\detail
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        24/02/2023     20:02           4762 bool_trait_def.hpp
+-a----        24/02/2023     20:02            929 bool_trait_undef.hpp
+-a----        24/02/2023     20:02           5585 common_arithmetic_type.hpp
+-a----        24/02/2023     20:02           3028 common_type_impl.hpp
+-a----        24/02/2023     20:02           2823 composite_member_pointer_type.hpp
+-a----        24/02/2023     20:02           3624 composite_pointer_type.hpp
+-a----        24/02/2023     20:02           4560 config.hpp
+-a----        24/02/2023     20:02            915 detector.hpp
+-a----        24/02/2023     20:02          12287 has_binary_operator.hpp
+-a----        24/02/2023     20:02          10009 has_postfix_operator.hpp
+-a----        24/02/2023     20:02          10899 has_prefix_operator.hpp
+-a----        24/02/2023     20:02           1190 ice_and.hpp
+-a----        24/02/2023     20:02           1165 ice_eq.hpp
+-a----        24/02/2023     20:02            971 ice_not.hpp
+-a----        24/02/2023     20:02           1192 ice_or.hpp
+-a----        24/02/2023     20:02           3072 is_function_cxx_03.hpp
+-a----        24/02/2023     20:02          32254 is_function_cxx_11.hpp
+-a----        24/02/2023     20:02           1925 is_function_msvc10_fix.hpp
+-a----        24/02/2023     20:02          37081 is_function_ptr_helper.hpp
+-a----        24/02/2023     20:02          48400 is_function_ptr_tester.hpp
+-a----        24/02/2023     20:02           2649 is_likely_lambda.hpp
+-a----        24/02/2023     20:02           3673 is_member_function_pointer_cxx_03.hpp
+-a----        24/02/2023     20:02          40311 is_member_function_pointer_cxx_11.hpp
+-a----        24/02/2023     20:02         145831 is_mem_fun_pointer_impl.hpp
+-a----        24/02/2023     20:02         193728 is_mem_fun_pointer_tester.hpp
+-a----        24/02/2023     20:02           3510 is_rvalue_reference_msvc10_fix.hpp
+-a----        24/02/2023     20:02           3451 is_swappable_cxx_11.hpp
+-a----        24/02/2023     20:02           1359 mp_defer.hpp
+-a----        24/02/2023     20:02            535 template_arity_spec.hpp
+-a----        24/02/2023     20:02            726 yes_no_type.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-type-traits_x
+    64-windows-static\include\boost\utility
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        24/02/2023     20:02            384 declval.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-type-traits_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost-type-traits
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-type-traits_x
+    64-windows-static\share\boost-type-traits
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42           1338 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           3764 vcpkg.spdx.json
+-a----        12/07/2025     05:42            925 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-uninstall_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                share
+-a----        12/07/2025     05:42             73 BUILD_INFO
+-a----        12/07/2025     05:42            234 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-uninstall_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost
+d-----        12/07/2025     05:42                boost-uninstall
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-uninstall_x64
+    -windows-static\share\boost
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42            328 vcpkg-cmake-wrapper.cmake
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-uninstall_x64
+    -windows-static\share\boost-uninstall
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42           3797 vcpkg.spdx.json
+-a----        12/07/2025     05:42            605 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-vcpkg-helpers_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                share
+-a----        12/07/2025     05:42             73 BUILD_INFO
+-a----        12/07/2025     05:42            264 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-vcpkg-helpers_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                boost-vcpkg-helpers
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\boost-vcpkg-helpers
+    _x64-windows-static\share\boost-vcpkg-helpers
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42            818 boost-modular-headers.cmake
+-a----        12/07/2025     05:42           1338 boost_LICENSE_1_0.txt
+-a----        12/07/2025     05:42           1096 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           5638 vcpkg.spdx.json
+-a----        12/07/2025     05:42           1102 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\fmt_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                debug
+d-----        12/07/2025     05:43                include
+d-----        12/07/2025     05:43                lib
+d-----        12/07/2025     05:43                share
+-a----        12/07/2025     05:43             44 BUILD_INFO
+-a----        12/07/2025     05:43            341 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\fmt_x64-windows-static\debug
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                lib
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\fmt_x64-windows-static\debug\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                pkgconfig
+-a----        12/07/2025     05:43        4029680 fmtd.lib
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\fmt_x64-windows-static\debug\lib\pkgconfig
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:43            241 fmt.pc
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\fmt_x64-windows-static\include
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                fmt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\fmt_x64-windows-static\include\fmt
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        10/05/2023     00:55           7420 args.h
+-a----        10/05/2023     00:55          74109 chrono.h
+-a----        10/05/2023     00:55          24288 color.h
+-a----        10/05/2023     00:55          21087 compile.h
+-a----        10/05/2023     00:55          99583 core.h
+-a----        12/07/2025     05:42          73528 format-inl.h
+-a----        10/05/2023     00:55         173982 format.h
+-a----        10/05/2023     00:55          13081 os.h
+-a----        10/05/2023     00:55           6589 ostream.h
+-a----        10/05/2023     00:55          21233 printf.h
+-a----        10/05/2023     00:55          24107 ranges.h
+-a----        10/05/2023     00:55          10723 std.h
+-a----        10/05/2023     00:55          10012 xchar.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\fmt_x64-windows-static\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                pkgconfig
+-a----        12/07/2025     05:43        4031184 fmt.lib
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\fmt_x64-windows-static\lib\pkgconfig
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:43            237 fmt.pc
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\fmt_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                fmt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\fmt_x64-windows-static\share\fmt
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        10/05/2023     00:55           1431 copyright
+-a----        12/07/2025     05:43           1905 fmt-config-version.cmake
+-a----        12/07/2025     05:43           1027 fmt-config.cmake
+-a----        12/07/2025     05:43            828 fmt-targets-debug.cmake
+-a----        12/07/2025     05:43            824 fmt-targets-release.cmake
+-a----        12/07/2025     05:43           4515 fmt-targets.cmake
+-a----        11/07/2025     23:13            265 usage
+-a----        12/07/2025     05:43           5598 vcpkg.spdx.json
+-a----        12/07/2025     05:42           1430 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\rsm-binary-io_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                debug
+d-----        12/07/2025     05:42                include
+d-----        12/07/2025     05:42                lib
+d-----        12/07/2025     05:42                share
+-a----        12/07/2025     05:42             44 BUILD_INFO
+-a----        12/07/2025     05:42            293 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\rsm-binary-io_x64-windows-static\debug
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                lib
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\rsm-binary-io_x64-windows-static\debug\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42        1155072 binary_iod.lib
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\rsm-binary-io_x64-windows-static\include
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                binary_io
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\rsm-binary-io_x64-w
+    indows-static\include\binary_io
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        30/04/2022     00:58           8268 any_stream.hpp
+-a----        30/04/2022     00:58            195 binary_io.hpp
+-a----        30/04/2022     00:58          18730 common.hpp
+-a----        30/04/2022     00:58           4257 file_stream.hpp
+-a----        30/04/2022     00:58           4773 memory_stream.hpp
+-a----        30/04/2022     00:58           2686 span_stream.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\rsm-binary-io_x64-windows-static\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42        1038548 binary_io.lib
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\rsm-binary-io_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                binary_io
+d-----        12/07/2025     05:42                rsm-binary-io
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\rsm-binary-io_x64-w
+    indows-static\share\binary_io
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42            900 binary_io-targets-debug.cmake
+-a----        12/07/2025     05:42            896 binary_io-targets-release.cmake
+-a----        12/07/2025     05:42           4228 binary_io-targets.cmake
+-a----        12/07/2025     05:42             62 binary_ioConfig.cmake
+-a----        12/07/2025     05:42           2827 binary_ioConfigVersion.cmake
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\rsm-binary-io_x64-w
+    indows-static\share\rsm-binary-io
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        30/04/2022     00:58           1070 copyright
+-a----        12/07/2025     05:42           3777 vcpkg.spdx.json
+-a----        12/07/2025     05:42            923 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\simpleini_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                include
+d-----        12/07/2025     05:42                share
+-a----        12/07/2025     05:42             44 BUILD_INFO
+-a----        12/07/2025     05:42            264 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\simpleini_x64-windows-static\include
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/03/2022     22:36          19067 ConvertUTF.c
+-a----        15/03/2022     22:36           5940 ConvertUTF.h
+-a----        15/03/2022     22:36         129933 SimpleIni.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\simpleini_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                simpleini
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\simpleini_x64-windows-static\share\simpleini
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/03/2022     22:36           1089 copyright
+-a----        12/07/2025     05:42           3807 vcpkg.spdx.json
+-a----        12/07/2025     05:42            677 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                debug
+d-----        12/07/2025     05:43                include
+d-----        12/07/2025     05:43                lib
+d-----        12/07/2025     05:43                share
+-a----        12/07/2025     05:43             44 BUILD_INFO
+-a----        12/07/2025     05:43            295 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static\debug
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                lib
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static\debug\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                pkgconfig
+-a----        12/07/2025     05:43       18935518 spdlogd.lib
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static\debug\lib\pkgconfig
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:43            354 spdlog.pc
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static\include
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                spdlog
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static\include\spdlog
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                cfg
+d-----        12/07/2025     05:43                details
+d-----        12/07/2025     05:43                fmt
+d-----        12/07/2025     05:43                sinks
+-a----        02/11/2022     23:13           3587 async.h
+-a----        02/11/2022     23:13           2494 async_logger-inl.h
+-a----        02/11/2022     23:13           2276 async_logger.h
+-a----        02/11/2022     23:13           2064 common-inl.h
+-a----        12/07/2025     05:43          12189 common.h
+-a----        02/11/2022     23:13            462 formatter.h
+-a----        02/11/2022     23:13            304 fwd.h
+-a----        02/11/2022     23:13           7036 logger-inl.h
+-a----        02/11/2022     23:13          15636 logger.h
+-a----        02/11/2022     23:13          43590 pattern_formatter-inl.h
+-a----        02/11/2022     23:13           3603 pattern_formatter.h
+-a----        02/11/2022     23:13           2974 spdlog-inl.h
+-a----        02/11/2022     23:13          11279 spdlog.h
+-a----        02/11/2022     23:13           1726 stopwatch.h
+-a----        12/07/2025     05:43           6628 tweakme.h
+-a----        02/11/2022     23:13            331 version.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static\include\spdlog\cfg
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/11/2022     23:13           1229 argv.h
+-a----        02/11/2022     23:13            988 env.h
+-a----        02/11/2022     23:13           3174 helpers-inl.h
+-a----        02/11/2022     23:13            714 helpers.h
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-
+    static\include\spdlog\details
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/11/2022     23:13           1884 backtracer-inl.h
+-a----        02/11/2022     23:13           1139 backtracer.h
+-a----        02/11/2022     23:13           3512 circular_q.h
+-a----        02/11/2022     23:13            609 console_globals.h
+-a----        02/11/2022     23:13           4582 file_helper-inl.h
+-a----        02/11/2022     23:13           1739 file_helper.h
+-a----        02/11/2022     23:13           4586 fmt_helper.h
+-a----        02/11/2022     23:13           1104 log_msg-inl.h
+-a----        02/11/2022     23:13           1154 log_msg.h
+-a----        02/11/2022     23:13           1656 log_msg_buffer-inl.h
+-a----        02/11/2022     23:13            933 log_msg_buffer.h
+-a----        02/11/2022     23:13           3784 mpmc_blocking_q.h
+-a----        02/11/2022     23:13            967 null_mutex.h
+-a----        02/11/2022     23:13          16664 os-inl.h
+-a----        02/11/2022     23:13           3818 os.h
+-a----        02/11/2022     23:13            622 periodic_worker-inl.h
+-a----        02/11/2022     23:13           1766 periodic_worker.h
+-a----        02/11/2022     23:13           8411 registry-inl.h
+-a----        02/11/2022     23:13           3936 registry.h
+-a----        02/11/2022     23:13            754 synchronous_factory.h
+-a----        02/11/2022     23:13           4329 tcp_client-windows.h
+-a----        02/11/2022     23:13           3911 tcp_client.h
+-a----        02/11/2022     23:13           3628 thread_pool-inl.h
+-a----        02/11/2022     23:13           3394 thread_pool.h
+-a----        02/11/2022     23:13           3108 udp_client-windows.h
+-a----        02/11/2022     23:13           2264 udp_client.h
+-a----        02/11/2022     23:13            187 windows_include.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static\include\spdlog\fmt
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/11/2022     23:13           7284 bin_to_hex.h
+-a----        02/11/2022     23:13            523 chrono.h
+-a----        02/11/2022     23:13            531 compile.h
+-a----        02/11/2022     23:13           1004 fmt.h
+-a----        02/11/2022     23:13            526 ostr.h
+-a----        02/11/2022     23:13            523 ranges.h
+-a----        02/11/2022     23:13            520 xchar.h
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-
+    static\include\spdlog\sinks
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/11/2022     23:13           4562 android_sink.h
+-a----        02/11/2022     23:13           4594 ansicolor_sink-inl.h
+-a----        02/11/2022     23:13           3954 ansicolor_sink.h
+-a----        02/11/2022     23:13           1778 base_sink-inl.h
+-a----        02/11/2022     23:13           1565 base_sink.h
+-a----        02/11/2022     23:13           1102 basic_file_sink-inl.h
+-a----        02/11/2022     23:13           1834 basic_file_sink.h
+-a----        02/11/2022     23:13          10310 daily_file_sink.h
+-a----        02/11/2022     23:13           2438 dist_sink.h
+-a----        02/11/2022     23:13           3014 dup_filter_sink.h
+-a----        02/11/2022     23:13           6623 hourly_file_sink.h
+-a----        02/11/2022     23:13           3744 mongo_sink.h
+-a----        02/11/2022     23:13           1545 msvc_sink.h
+-a----        02/11/2022     23:13           1229 null_sink.h
+-a----        02/11/2022     23:13           1250 ostream_sink.h
+-a----        02/11/2022     23:13           3382 qt_sinks.h
+-a----        02/11/2022     23:13           2121 ringbuffer_sink.h
+-a----        02/11/2022     23:13           4733 rotating_file_sink-inl.h
+-a----        02/11/2022     23:13           2648 rotating_file_sink.h
+-a----        02/11/2022     23:13            725 sink-inl.h
+-a----        02/11/2022     23:13            891 sink.h
+-a----        02/11/2022     23:13           1214 stdout_color_sinks-inl.h
+-a----        02/11/2022     23:13           1626 stdout_color_sinks.h
+-a----        02/11/2022     23:13           4364 stdout_sinks-inl.h
+-a----        02/11/2022     23:13           2419 stdout_sinks.h
+-a----        02/11/2022     23:13           3727 syslog_sink.h
+-a----        02/11/2022     23:13           4146 systemd_sink.h
+-a----        02/11/2022     23:13           2147 tcp_sink.h
+-a----        02/11/2022     23:13           1820 udp_sink.h
+-a----        02/11/2022     23:13           6357 wincolor_sink-inl.h
+-a----        02/11/2022     23:13           2711 wincolor_sink.h
+-a----        02/11/2022     23:13           8870 win_eventlog_sink.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                pkgconfig
+-a----        12/07/2025     05:43       16071148 spdlog.lib
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static\lib\pkgconfig
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:43            351 spdlog.pc
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                spdlog
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\spdlog_x64-windows-static\share\spdlog
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/11/2022     23:13           1348 copyright
+-a----        12/07/2025     05:43           1399 spdlogConfig.cmake
+-a----        12/07/2025     05:43            864 spdlogConfigTargets-debug.cmake
+-a----        12/07/2025     05:43            860 spdlogConfigTargets-release.cmake
+-a----        12/07/2025     05:43           4674 spdlogConfigTargets.cmake
+-a----        12/07/2025     05:43           2830 spdlogConfigVersion.cmake
+-a----        11/07/2025     23:13            286 usage
+-a----        12/07/2025     05:43           5546 vcpkg.spdx.json
+-a----        12/07/2025     05:42           1575 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\vcpkg-cmake-config_x64-windows
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                share
+-a----        12/07/2025     05:42             75 BUILD_INFO
+-a----        12/07/2025     05:42            177 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\vcpkg-cmake-config_x64-windows\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                vcpkg-cmake-config
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\vcpkg-cmake-config_
+    x64-windows\share\vcpkg-cmake-config
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        11/07/2025     23:13           1096 copyright
+-a----        11/07/2025     23:13             68 vcpkg-port-config.cmake
+-a----        12/07/2025     05:42           4969 vcpkg.spdx.json
+-a----        12/07/2025     05:42            843 vcpkg_abi_info.txt
+-a----        11/07/2025     23:13          14006 vcpkg_cmake_config_fixup.cmake
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\vcpkg-cmake_x64-windows
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                share
+-a----        12/07/2025     05:42             78 BUILD_INFO
+-a----        12/07/2025     05:42            154 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\vcpkg-cmake_x64-windows\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:42                vcpkg-cmake
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\vcpkg-cmake_x64-windows\share\vcpkg-cmake
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        11/07/2025     04:06           1073 copyright
+-a----        11/07/2025     23:13            189 vcpkg-port-config.cmake
+-a----        12/07/2025     05:42           5571 vcpkg.spdx.json
+-a----        12/07/2025     05:42           1495 vcpkg_abi_info.txt
+-a----        11/07/2025     23:13           3858 vcpkg_cmake_build.cmake
+-a----        11/07/2025     23:13          14353 vcpkg_cmake_configure.cmake
+-a----        11/07/2025     23:13            577 vcpkg_cmake_install.cmake
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\xbyak_x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                include
+d-----        12/07/2025     05:43                share
+-a----        12/07/2025     05:43             44 BUILD_INFO
+-a----        12/07/2025     05:43            287 CONTROL
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\xbyak_x64-windows-static\include
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                xbyak
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\xbyak_x64-windows-static\include\xbyak
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        20/02/2023     07:54          99430 xbyak.h
+-a----        20/02/2023     07:54           4251 xbyak_bin2hex.h
+-a----        20/02/2023     07:54         253414 xbyak_mnemonic.h
+-a----        20/02/2023     07:54          32459 xbyak_util.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\xbyak_x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     05:43                xbyak
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\vcpkg\pkgs\xbyak_x64-windows-static\share\xbyak
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        20/02/2023     07:54           1501 copyright
+-a----        12/07/2025     05:43           3718 vcpkg.spdx.json
+-a----        12/07/2025     05:42            838 vcpkg_abi_info.txt
+-a----        12/07/2025     05:43           2824 xbyak-config-version.cmake
+-a----        12/07/2025     05:43            955 xbyak-config.cmake
+-a----        12/07/2025     05:43           4184 xbyak-targets.cmake
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                share
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                vcpkg-cmake
+d-----        12/07/2025     23:25                vcpkg-cmake-config
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows\share\vcpkg-cmake
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        11/07/2025     04:06           1073 copyright
+-a----        11/07/2025     23:13            189 vcpkg-port-config.cmake
+-a----        12/07/2025     05:42           5571 vcpkg.spdx.json
+-a----        12/07/2025     05:42           1495 vcpkg_abi_info.txt
+-a----        11/07/2025     23:13           3858 vcpkg_cmake_build.cmake
+-a----        11/07/2025     23:13          14353 vcpkg_cmake_configure.cmake
+-a----        11/07/2025     23:13            577 vcpkg_cmake_install.cmake
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows\share\vcpkg-cmake-config
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        11/07/2025     23:13           1096 copyright
+-a----        11/07/2025     23:13             68 vcpkg-port-config.cmake
+-a----        12/07/2025     05:42           4969 vcpkg.spdx.json
+-a----        12/07/2025     05:42            843 vcpkg_abi_info.txt
+-a----        11/07/2025     23:13          14006 vcpkg_cmake_config_fixup.cmake
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                debug
+d-----        12/07/2025     23:25                include
+d-----        12/07/2025     23:25                lib
+d-----        12/07/2025     23:25                share
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\debug
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                lib
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\debug\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                pkgconfig
+-a----        12/07/2025     05:42        1155072 binary_iod.lib
+-a----        12/07/2025     05:43        4029680 fmtd.lib
+-a----        12/07/2025     05:43       18935518 spdlogd.lib
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\debug\lib\pkgconfig
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:43            241 fmt.pc
+-a----        12/07/2025     05:43            354 spdlog.pc
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                binary_io
+d-----        12/07/2025     23:25                boost
+d-----        12/07/2025     23:25                fmt
+d-----        12/07/2025     23:25                spdlog
+d-----        12/07/2025     23:25                xbyak
+-a----        15/03/2022     22:36          19067 ConvertUTF.c
+-a----        15/03/2022     22:36           5940 ConvertUTF.h
+-a----        15/03/2022     22:36         129933 SimpleIni.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\binary_io
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        30/04/2022     00:58           8268 any_stream.hpp
+-a----        30/04/2022     00:58            195 binary_io.hpp
+-a----        30/04/2022     00:58          18730 common.hpp
+-a----        30/04/2022     00:58           4257 file_stream.hpp
+-a----        30/04/2022     00:58           4773 memory_stream.hpp
+-a----        30/04/2022     00:58           2686 span_stream.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                assert
+d-----        12/07/2025     23:25                config
+d-----        12/07/2025     23:25                detail
+d-----        12/07/2025     23:25                stl_interfaces
+d-----        12/07/2025     23:25                type_traits
+d-----        12/07/2025     23:25                utility
+-a----        24/02/2023     20:02            653 aligned_storage.hpp
+-a----        03/03/2023     16:15           2625 assert.hpp
+-a----        22/02/2023     21:08           2216 config.hpp
+-a----        22/02/2023     21:08          18497 cstdint.hpp
+-a----        03/03/2023     16:15           1681 current_function.hpp
+-a----        22/02/2023     21:08           4160 cxx11_char_types.hpp
+-a----        22/02/2023     21:08           6362 limits.hpp
+-a----        13/10/2021     17:03           7260 static_assert.hpp
+-a----        24/02/2023     20:02           7533 type_traits.hpp
+-a----        22/02/2023     21:08           1117 version.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\assert
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        03/03/2023     16:15           5584 source_location.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\config
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                abi
+d-----        12/07/2025     23:25                compiler
+d-----        12/07/2025     23:25                detail
+d-----        12/07/2025     23:25                no_tr1
+d-----        12/07/2025     23:25                platform
+d-----        12/07/2025     23:25                stdlib
+-a----        22/02/2023     21:08            700 abi_prefix.hpp
+-a----        22/02/2023     21:08            781 abi_suffix.hpp
+-a----        22/02/2023     21:08          11405 assert_cxx03.hpp
+-a----        22/02/2023     21:08          11520 assert_cxx11.hpp
+-a----        22/02/2023     21:08           2396 assert_cxx14.hpp
+-a----        22/02/2023     21:08           3174 assert_cxx17.hpp
+-a----        22/02/2023     21:08           2948 assert_cxx20.hpp
+-a----        22/02/2023     21:08            989 assert_cxx98.hpp
+-a----        22/02/2023     21:08          17829 auto_link.hpp
+-a----        22/02/2023     21:08            848 header_deprecated.hpp
+-a----        22/02/2023     21:08           1120 helper_macros.hpp
+-a----        22/02/2023     21:08           1019 pragma_message.hpp
+-a----        22/02/2023     21:08           3509 requires_threads.hpp
+-a----        12/07/2025     05:42           5456 user.hpp
+-a----        22/02/2023     21:08           1820 warning_disable.hpp
+-a----        22/02/2023     21:08           8171 workaround.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\config\abi
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08           1002 borland_prefix.hpp
+-a----        22/02/2023     21:08            280 borland_suffix.hpp
+-a----        22/02/2023     21:08            819 msvc_prefix.hpp
+-a----        22/02/2023     21:08            252 msvc_suffix.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\config\compiler
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08          10760 borland.hpp
+-a----        22/02/2023     21:08          10085 clang.hpp
+-a----        22/02/2023     21:08           2305 clang_version.hpp
+-a----        22/02/2023     21:08          11602 codegear.hpp
+-a----        22/02/2023     21:08           1638 comeau.hpp
+-a----        22/02/2023     21:08           6038 common_edg.hpp
+-a----        22/02/2023     21:08            501 compaq_cxx.hpp
+-a----        22/02/2023     21:08          15493 cray.hpp
+-a----        22/02/2023     21:08            909 diab.hpp
+-a----        22/02/2023     21:08           4626 digitalmars.hpp
+-a----        22/02/2023     21:08          12427 gcc.hpp
+-a----        22/02/2023     21:08           4078 gcc_xml.hpp
+-a----        22/02/2023     21:08            822 greenhills.hpp
+-a----        22/02/2023     21:08           5000 hp_acc.hpp
+-a----        22/02/2023     21:08          22537 intel.hpp
+-a----        22/02/2023     21:08           1030 kai.hpp
+-a----        22/02/2023     21:08           6408 metrowerks.hpp
+-a----        22/02/2023     21:08           4811 mpw.hpp
+-a----        22/02/2023     21:08           2095 nvcc.hpp
+-a----        22/02/2023     21:08           5156 pathscale.hpp
+-a----        22/02/2023     21:08            770 pgi.hpp
+-a----        22/02/2023     21:08            774 sgi_mipspro.hpp
+-a----        22/02/2023     21:08           7705 sunpro_cc.hpp
+-a----        22/02/2023     21:08           6149 vacpp.hpp
+-a----        22/02/2023     21:08          12588 visualc.hpp
+-a----        22/02/2023     21:08           8202 xlcpp.hpp
+-a----        22/02/2023     21:08           4984 xlcpp_zos.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\config\detail
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08           8629 cxx_composite.hpp
+-a----        22/02/2023     21:08           3736 posix_features.hpp
+-a----        22/02/2023     21:08           5356 select_compiler_config.hpp
+-a----        22/02/2023     21:08           4588 select_platform_config.hpp
+-a----        22/02/2023     21:08           4653 select_stdlib_config.hpp
+-a----        22/02/2023     21:08          46059 suffix.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\config\no_tr1
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08            838 cmath.hpp
+-a----        22/02/2023     21:08            854 complex.hpp
+-a----        22/02/2023     21:08            878 functional.hpp
+-a----        22/02/2023     21:08            846 memory.hpp
+-a----        22/02/2023     21:08            854 utility.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\config\platform
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08            888 aix.hpp
+-a----        22/02/2023     21:08            442 amigaos.hpp
+-a----        22/02/2023     21:08            600 beos.hpp
+-a----        22/02/2023     21:08           2592 bsd.hpp
+-a----        22/02/2023     21:08            530 cloudabi.hpp
+-a----        22/02/2023     21:08            456 cray.hpp
+-a----        22/02/2023     21:08           1872 cygwin.hpp
+-a----        22/02/2023     21:08            807 haiku.hpp
+-a----        22/02/2023     21:08           2484 hpux.hpp
+-a----        22/02/2023     21:08            796 irix.hpp
+-a----        22/02/2023     21:08           2850 linux.hpp
+-a----        22/02/2023     21:08           2350 macos.hpp
+-a----        22/02/2023     21:08            773 qnxnto.hpp
+-a----        22/02/2023     21:08            841 solaris.hpp
+-a----        22/02/2023     21:08           2621 symbian.hpp
+-a----        22/02/2023     21:08            749 vms.hpp
+-a----        22/02/2023     21:08          14836 vxworks.hpp
+-a----        22/02/2023     21:08            578 wasm.hpp
+-a----        22/02/2023     21:08           2718 win32.hpp
+-a----        22/02/2023     21:08            789 zos.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\config\stdlib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08          11403 dinkumware.hpp
+-a----        22/02/2023     21:08           2830 libcomo.hpp
+-a----        22/02/2023     21:08           5867 libcpp.hpp
+-a----        22/02/2023     21:08          15824 libstdcpp3.hpp
+-a----        22/02/2023     21:08           2235 modena.hpp
+-a----        22/02/2023     21:08           2836 msl.hpp
+-a----        22/02/2023     21:08           6260 roguewave.hpp
+-a----        22/02/2023     21:08           5061 sgi.hpp
+-a----        22/02/2023     21:08           8585 stlport.hpp
+-a----        22/02/2023     21:08           2394 vacpp.hpp
+-a----        22/02/2023     21:08           1963 xlcpp_zos.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\detail
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08            353 workaround.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\stl_interfaces
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                detail
+-a----        19/11/2022     03:54           1234 config.hpp
+-a----        19/11/2022     03:54           3065 fwd.hpp
+-a----        19/11/2022     03:54          34026 iterator_interface.hpp
+-a----        19/11/2022     03:54           6477 reverse_iterator.hpp
+-a----        19/11/2022     03:54          40360 sequence_container_interface.hpp
+-a----        19/11/2022     03:54          10237 view_adaptor.hpp
+-a----        19/11/2022     03:54           7748 view_interface.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\stl_interfaces\detail
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        19/11/2022     03:54           4452 pipeable_view.hpp
+-a----        19/11/2022     03:54           3417 view_closure.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\type_traits
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                detail
+-a----        24/02/2023     20:02           1439 add_const.hpp
+-a----        24/02/2023     20:02           1399 add_cv.hpp
+-a----        24/02/2023     20:02            768 add_lvalue_reference.hpp
+-a----        24/02/2023     20:02           1505 add_pointer.hpp
+-a----        24/02/2023     20:02           1709 add_reference.hpp
+-a----        24/02/2023     20:02           2395 add_rvalue_reference.hpp
+-a----        24/02/2023     20:02           1424 add_volatile.hpp
+-a----        24/02/2023     20:02           3350 aligned_storage.hpp
+-a----        24/02/2023     20:02           3575 alignment_of.hpp
+-a----        24/02/2023     20:02            573 alignment_traits.hpp
+-a----        24/02/2023     20:02            862 arithmetic_traits.hpp
+-a----        24/02/2023     20:02            569 array_traits.hpp
+-a----        24/02/2023     20:02            724 broken_compiler_spec.hpp
+-a----        24/02/2023     20:02           4555 common_type.hpp
+-a----        24/02/2023     20:02           1001 composite_traits.hpp
+-a----        24/02/2023     20:02            843 conditional.hpp
+-a----        24/02/2023     20:02            708 config.hpp
+-a----        24/02/2023     20:02            889 conjunction.hpp
+-a----        24/02/2023     20:02            658 conversion_traits.hpp
+-a----        24/02/2023     20:02           1058 copy_cv.hpp
+-a----        24/02/2023     20:02            790 copy_cv_ref.hpp
+-a----        24/02/2023     20:02           1044 copy_reference.hpp
+-a----        24/02/2023     20:02            994 cv_traits.hpp
+-a----        24/02/2023     20:02           1496 decay.hpp
+-a----        24/02/2023     20:02           1899 declval.hpp
+-a----        24/02/2023     20:02            569 detected.hpp
+-a----        24/02/2023     20:02            670 detected_or.hpp
+-a----        24/02/2023     20:02            891 disjunction.hpp
+-a----        24/02/2023     20:02            829 enable_if.hpp
+-a----        24/02/2023     20:02           3751 extent.hpp
+-a----        24/02/2023     20:02           1071 floating_point_promotion.hpp
+-a----        24/02/2023     20:02           4801 function_traits.hpp
+-a----        24/02/2023     20:02           1572 has_bit_and.hpp
+-a----        24/02/2023     20:02           1841 has_bit_and_assign.hpp
+-a----        24/02/2023     20:02           1569 has_bit_or.hpp
+-a----        24/02/2023     20:02           1839 has_bit_or_assign.hpp
+-a----        24/02/2023     20:02           1571 has_bit_xor.hpp
+-a----        24/02/2023     20:02           1842 has_bit_xor_assign.hpp
+-a----        24/02/2023     20:02            936 has_complement.hpp
+-a----        24/02/2023     20:02          16135 has_dereference.hpp
+-a----        24/02/2023     20:02           1156 has_divides.hpp
+-a----        24/02/2023     20:02           1513 has_divides_assign.hpp
+-a----        24/02/2023     20:02           1762 has_equal_to.hpp
+-a----        24/02/2023     20:02           1756 has_greater.hpp
+-a----        24/02/2023     20:02           1775 has_greater_equal.hpp
+-a----        24/02/2023     20:02           1581 has_left_shift.hpp
+-a----        24/02/2023     20:02           1851 has_left_shift_assign.hpp
+-a----        24/02/2023     20:02           1750 has_less.hpp
+-a----        24/02/2023     20:02           1769 has_less_equal.hpp
+-a----        24/02/2023     20:02           1212 has_logical_and.hpp
+-a----        24/02/2023     20:02            998 has_logical_not.hpp
+-a----        24/02/2023     20:02           1208 has_logical_or.hpp
+-a----        24/02/2023     20:02           6520 has_minus.hpp
+-a----        24/02/2023     20:02           6809 has_minus_assign.hpp
+-a----        24/02/2023     20:02           1570 has_modulus.hpp
+-a----        24/02/2023     20:02           1841 has_modulus_assign.hpp
+-a----        24/02/2023     20:02           1162 has_multiplies.hpp
+-a----        24/02/2023     20:02           1521 has_multiplies_assign.hpp
+-a----        24/02/2023     20:02            731 has_negate.hpp
+-a----        24/02/2023     20:02           5166 has_new_operator.hpp
+-a----        24/02/2023     20:02           3766 has_nothrow_assign.hpp
+-a----        24/02/2023     20:02           2633 has_nothrow_constructor.hpp
+-a----        24/02/2023     20:02           3047 has_nothrow_copy.hpp
+-a----        24/02/2023     20:02           2204 has_nothrow_destructor.hpp
+-a----        24/02/2023     20:02           1774 has_not_equal_to.hpp
+-a----        24/02/2023     20:02           2282 has_operator.hpp
+-a----        24/02/2023     20:02           1800 has_plus.hpp
+-a----        24/02/2023     20:02           6891 has_plus_assign.hpp
+-a----        24/02/2023     20:02           1932 has_post_decrement.hpp
+-a----        24/02/2023     20:02           1932 has_post_increment.hpp
+-a----        24/02/2023     20:02           1922 has_pre_decrement.hpp
+-a----        24/02/2023     20:02           1923 has_pre_increment.hpp
+-a----        24/02/2023     20:02           1584 has_right_shift.hpp
+-a----        24/02/2023     20:02           1854 has_right_shift_assign.hpp
+-a----        24/02/2023     20:02           2208 has_trivial_assign.hpp
+-a----        24/02/2023     20:02           2233 has_trivial_constructor.hpp
+-a----        24/02/2023     20:02           2417 has_trivial_copy.hpp
+-a----        24/02/2023     20:02           1683 has_trivial_destructor.hpp
+-a----        24/02/2023     20:02           2666 has_trivial_move_assign.hpp
+-a----        24/02/2023     20:02           2939 has_trivial_move_constructor.hpp
+-a----        24/02/2023     20:02            746 has_unary_minus.hpp
+-a----        24/02/2023     20:02            690 has_unary_plus.hpp
+-a----        24/02/2023     20:02            901 has_virtual_destructor.hpp
+-a----        24/02/2023     20:02            768 ice.hpp
+-a----        24/02/2023     20:02           2546 integral_constant.hpp
+-a----        24/02/2023     20:02           6268 integral_promotion.hpp
+-a----        24/02/2023     20:02          23311 intrinsics.hpp
+-a----        24/02/2023     20:02           4501 is_abstract.hpp
+-a----        24/02/2023     20:02            778 is_arithmetic.hpp
+-a----        24/02/2023     20:02           1755 is_array.hpp
+-a----        24/02/2023     20:02           3925 is_assignable.hpp
+-a----        24/02/2023     20:02           7997 is_base_and_derived.hpp
+-a----        24/02/2023     20:02           1500 is_base_of.hpp
+-a----        24/02/2023     20:02           1486 is_base_of_tr1.hpp
+-a----        24/02/2023     20:02            912 is_bounded_array.hpp
+-a----        24/02/2023     20:02           3595 is_class.hpp
+-a----        24/02/2023     20:02           2825 is_complete.hpp
+-a----        24/02/2023     20:02            952 is_complex.hpp
+-a----        24/02/2023     20:02            848 is_compound.hpp
+-a----        24/02/2023     20:02           1630 is_const.hpp
+-a----        24/02/2023     20:02           4350 is_constructible.hpp
+-a----        24/02/2023     20:02          18654 is_convertible.hpp
+-a----        24/02/2023     20:02           4904 is_copy_assignable.hpp
+-a----        24/02/2023     20:02           6813 is_copy_constructible.hpp
+-a----        24/02/2023     20:02           4526 is_default_constructible.hpp
+-a----        24/02/2023     20:02           2572 is_destructible.hpp
+-a----        24/02/2023     20:02            752 is_detected.hpp
+-a----        24/02/2023     20:02            815 is_detected_convertible.hpp
+-a----        24/02/2023     20:02            796 is_detected_exact.hpp
+-a----        24/02/2023     20:02           3005 is_empty.hpp
+-a----        24/02/2023     20:02           4996 is_enum.hpp
+-a----        24/02/2023     20:02            868 is_final.hpp
+-a----        24/02/2023     20:02            789 is_float.hpp
+-a----        24/02/2023     20:02           1374 is_floating_point.hpp
+-a----        24/02/2023     20:02            807 is_function.hpp
+-a----        24/02/2023     20:02            996 is_fundamental.hpp
+-a----        24/02/2023     20:02           3968 is_integral.hpp
+-a----        24/02/2023     20:02           1746 is_list_constructible.hpp
+-a----        24/02/2023     20:02           2012 is_lvalue_reference.hpp
+-a----        24/02/2023     20:02            824 is_member_function_pointer.hpp
+-a----        24/02/2023     20:02            839 is_member_object_pointer.hpp
+-a----        24/02/2023     20:02           1969 is_member_pointer.hpp
+-a----        24/02/2023     20:02           1067 is_noncopyable.hpp
+-a----        24/02/2023     20:02           3964 is_nothrow_move_assignable.hpp
+-a----        24/02/2023     20:02           4043 is_nothrow_move_constructible.hpp
+-a----        24/02/2023     20:02           1444 is_nothrow_swappable.hpp
+-a----        24/02/2023     20:02            907 is_object.hpp
+-a----        24/02/2023     20:02           1809 is_pod.hpp
+-a----        24/02/2023     20:02           1901 is_pointer.hpp
+-a----        24/02/2023     20:02           3187 is_polymorphic.hpp
+-a----        24/02/2023     20:02            938 is_reference.hpp
+-a----        24/02/2023     20:02            981 is_rvalue_reference.hpp
+-a----        24/02/2023     20:02           1511 is_same.hpp
+-a----        24/02/2023     20:02            966 is_scalar.hpp
+-a----        24/02/2023     20:02            640 is_scoped_enum.hpp
+-a----        24/02/2023     20:02           6652 is_signed.hpp
+-a----        24/02/2023     20:02           1127 is_stateless.hpp
+-a----        24/02/2023     20:02           3341 is_swappable.hpp
+-a----        24/02/2023     20:02            927 is_trivially_copyable.hpp
+-a----        24/02/2023     20:02            843 is_unbounded_array.hpp
+-a----        24/02/2023     20:02           1075 is_union.hpp
+-a----        24/02/2023     20:02            593 is_unscoped_enum.hpp
+-a----        24/02/2023     20:02           6772 is_unsigned.hpp
+-a----        24/02/2023     20:02           6146 is_virtual_base_of.hpp
+-a----        24/02/2023     20:02            890 is_void.hpp
+-a----        24/02/2023     20:02           1665 is_volatile.hpp
+-a----        24/02/2023     20:02           4621 make_signed.hpp
+-a----        24/02/2023     20:02           4691 make_unsigned.hpp
+-a----        24/02/2023     20:02           1052 make_void.hpp
+-a----        24/02/2023     20:02            472 negation.hpp
+-a----        24/02/2023     20:02            702 nonesuch.hpp
+-a----        24/02/2023     20:02           1441 object_traits.hpp
+-a----        24/02/2023     20:02            755 promote.hpp
+-a----        24/02/2023     20:02           2585 rank.hpp
+-a----        24/02/2023     20:02            590 reference_traits.hpp
+-a----        24/02/2023     20:02           1885 remove_all_extents.hpp
+-a----        24/02/2023     20:02            802 remove_bounds.hpp
+-a----        24/02/2023     20:02           1359 remove_const.hpp
+-a----        24/02/2023     20:02           1794 remove_cv.hpp
+-a----        24/02/2023     20:02            859 remove_cv_ref.hpp
+-a----        24/02/2023     20:02           1791 remove_extent.hpp
+-a----        24/02/2023     20:02           2203 remove_pointer.hpp
+-a----        24/02/2023     20:02           1783 remove_reference.hpp
+-a----        24/02/2023     20:02           1398 remove_volatile.hpp
+-a----        24/02/2023     20:02            586 same_traits.hpp
+-a----        24/02/2023     20:02            893 transform_traits.hpp
+-a----        24/02/2023     20:02            636 type_identity.hpp
+-a----        24/02/2023     20:02          10036 type_with_alignment.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\type_traits\detail
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        24/02/2023     20:02           4762 bool_trait_def.hpp
+-a----        24/02/2023     20:02            929 bool_trait_undef.hpp
+-a----        24/02/2023     20:02           5585 common_arithmetic_type.hpp
+-a----        24/02/2023     20:02           3028 common_type_impl.hpp
+-a----        24/02/2023     20:02           2823 composite_member_pointer_type.hpp
+-a----        24/02/2023     20:02           3624 composite_pointer_type.hpp
+-a----        24/02/2023     20:02           4560 config.hpp
+-a----        24/02/2023     20:02            915 detector.hpp
+-a----        24/02/2023     20:02          12287 has_binary_operator.hpp
+-a----        24/02/2023     20:02          10009 has_postfix_operator.hpp
+-a----        24/02/2023     20:02          10899 has_prefix_operator.hpp
+-a----        24/02/2023     20:02           1190 ice_and.hpp
+-a----        24/02/2023     20:02           1165 ice_eq.hpp
+-a----        24/02/2023     20:02            971 ice_not.hpp
+-a----        24/02/2023     20:02           1192 ice_or.hpp
+-a----        24/02/2023     20:02           3072 is_function_cxx_03.hpp
+-a----        24/02/2023     20:02          32254 is_function_cxx_11.hpp
+-a----        24/02/2023     20:02           1925 is_function_msvc10_fix.hpp
+-a----        24/02/2023     20:02          37081 is_function_ptr_helper.hpp
+-a----        24/02/2023     20:02          48400 is_function_ptr_tester.hpp
+-a----        24/02/2023     20:02           2649 is_likely_lambda.hpp
+-a----        24/02/2023     20:02           3673 is_member_function_pointer_cxx_03.hpp
+-a----        24/02/2023     20:02          40311 is_member_function_pointer_cxx_11.hpp
+-a----        24/02/2023     20:02         145831 is_mem_fun_pointer_impl.hpp
+-a----        24/02/2023     20:02         193728 is_mem_fun_pointer_tester.hpp
+-a----        24/02/2023     20:02           3510 is_rvalue_reference_msvc10_fix.hpp
+-a----        24/02/2023     20:02           3451 is_swappable_cxx_11.hpp
+-a----        24/02/2023     20:02           1359 mp_defer.hpp
+-a----        24/02/2023     20:02            535 template_arity_spec.hpp
+-a----        24/02/2023     20:02            726 yes_no_type.hpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\boost\utility
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        24/02/2023     20:02            384 declval.hpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\fmt
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        10/05/2023     00:55           7420 args.h
+-a----        10/05/2023     00:55          74109 chrono.h
+-a----        10/05/2023     00:55          24288 color.h
+-a----        10/05/2023     00:55          21087 compile.h
+-a----        10/05/2023     00:55          99583 core.h
+-a----        12/07/2025     05:42          73528 format-inl.h
+-a----        10/05/2023     00:55         173982 format.h
+-a----        10/05/2023     00:55          13081 os.h
+-a----        10/05/2023     00:55           6589 ostream.h
+-a----        10/05/2023     00:55          21233 printf.h
+-a----        10/05/2023     00:55          24107 ranges.h
+-a----        10/05/2023     00:55          10723 std.h
+-a----        10/05/2023     00:55          10012 xchar.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\spdlog
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                cfg
+d-----        12/07/2025     23:25                details
+d-----        12/07/2025     23:25                fmt
+d-----        12/07/2025     23:25                sinks
+-a----        02/11/2022     23:13           3587 async.h
+-a----        02/11/2022     23:13           2494 async_logger-inl.h
+-a----        02/11/2022     23:13           2276 async_logger.h
+-a----        02/11/2022     23:13           2064 common-inl.h
+-a----        12/07/2025     05:43          12189 common.h
+-a----        02/11/2022     23:13            462 formatter.h
+-a----        02/11/2022     23:13            304 fwd.h
+-a----        02/11/2022     23:13           7036 logger-inl.h
+-a----        02/11/2022     23:13          15636 logger.h
+-a----        02/11/2022     23:13          43590 pattern_formatter-inl.h
+-a----        02/11/2022     23:13           3603 pattern_formatter.h
+-a----        02/11/2022     23:13           2974 spdlog-inl.h
+-a----        02/11/2022     23:13          11279 spdlog.h
+-a----        02/11/2022     23:13           1726 stopwatch.h
+-a----        12/07/2025     05:43           6628 tweakme.h
+-a----        02/11/2022     23:13            331 version.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\spdlog\cfg
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/11/2022     23:13           1229 argv.h
+-a----        02/11/2022     23:13            988 env.h
+-a----        02/11/2022     23:13           3174 helpers-inl.h
+-a----        02/11/2022     23:13            714 helpers.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\spdlog\details
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/11/2022     23:13           1884 backtracer-inl.h
+-a----        02/11/2022     23:13           1139 backtracer.h
+-a----        02/11/2022     23:13           3512 circular_q.h
+-a----        02/11/2022     23:13            609 console_globals.h
+-a----        02/11/2022     23:13           4582 file_helper-inl.h
+-a----        02/11/2022     23:13           1739 file_helper.h
+-a----        02/11/2022     23:13           4586 fmt_helper.h
+-a----        02/11/2022     23:13           1104 log_msg-inl.h
+-a----        02/11/2022     23:13           1154 log_msg.h
+-a----        02/11/2022     23:13           1656 log_msg_buffer-inl.h
+-a----        02/11/2022     23:13            933 log_msg_buffer.h
+-a----        02/11/2022     23:13           3784 mpmc_blocking_q.h
+-a----        02/11/2022     23:13            967 null_mutex.h
+-a----        02/11/2022     23:13          16664 os-inl.h
+-a----        02/11/2022     23:13           3818 os.h
+-a----        02/11/2022     23:13            622 periodic_worker-inl.h
+-a----        02/11/2022     23:13           1766 periodic_worker.h
+-a----        02/11/2022     23:13           8411 registry-inl.h
+-a----        02/11/2022     23:13           3936 registry.h
+-a----        02/11/2022     23:13            754 synchronous_factory.h
+-a----        02/11/2022     23:13           4329 tcp_client-windows.h
+-a----        02/11/2022     23:13           3911 tcp_client.h
+-a----        02/11/2022     23:13           3628 thread_pool-inl.h
+-a----        02/11/2022     23:13           3394 thread_pool.h
+-a----        02/11/2022     23:13           3108 udp_client-windows.h
+-a----        02/11/2022     23:13           2264 udp_client.h
+-a----        02/11/2022     23:13            187 windows_include.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\spdlog\fmt
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/11/2022     23:13           7284 bin_to_hex.h
+-a----        02/11/2022     23:13            523 chrono.h
+-a----        02/11/2022     23:13            531 compile.h
+-a----        02/11/2022     23:13           1004 fmt.h
+-a----        02/11/2022     23:13            526 ostr.h
+-a----        02/11/2022     23:13            523 ranges.h
+-a----        02/11/2022     23:13            520 xchar.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\spdlog\sinks
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/11/2022     23:13           4562 android_sink.h
+-a----        02/11/2022     23:13           4594 ansicolor_sink-inl.h
+-a----        02/11/2022     23:13           3954 ansicolor_sink.h
+-a----        02/11/2022     23:13           1778 base_sink-inl.h
+-a----        02/11/2022     23:13           1565 base_sink.h
+-a----        02/11/2022     23:13           1102 basic_file_sink-inl.h
+-a----        02/11/2022     23:13           1834 basic_file_sink.h
+-a----        02/11/2022     23:13          10310 daily_file_sink.h
+-a----        02/11/2022     23:13           2438 dist_sink.h
+-a----        02/11/2022     23:13           3014 dup_filter_sink.h
+-a----        02/11/2022     23:13           6623 hourly_file_sink.h
+-a----        02/11/2022     23:13           3744 mongo_sink.h
+-a----        02/11/2022     23:13           1545 msvc_sink.h
+-a----        02/11/2022     23:13           1229 null_sink.h
+-a----        02/11/2022     23:13           1250 ostream_sink.h
+-a----        02/11/2022     23:13           3382 qt_sinks.h
+-a----        02/11/2022     23:13           2121 ringbuffer_sink.h
+-a----        02/11/2022     23:13           4733 rotating_file_sink-inl.h
+-a----        02/11/2022     23:13           2648 rotating_file_sink.h
+-a----        02/11/2022     23:13            725 sink-inl.h
+-a----        02/11/2022     23:13            891 sink.h
+-a----        02/11/2022     23:13           1214 stdout_color_sinks-inl.h
+-a----        02/11/2022     23:13           1626 stdout_color_sinks.h
+-a----        02/11/2022     23:13           4364 stdout_sinks-inl.h
+-a----        02/11/2022     23:13           2419 stdout_sinks.h
+-a----        02/11/2022     23:13           3727 syslog_sink.h
+-a----        02/11/2022     23:13           4146 systemd_sink.h
+-a----        02/11/2022     23:13           2147 tcp_sink.h
+-a----        02/11/2022     23:13           1820 udp_sink.h
+-a----        02/11/2022     23:13           6357 wincolor_sink-inl.h
+-a----        02/11/2022     23:13           2711 wincolor_sink.h
+-a----        02/11/2022     23:13           8870 win_eventlog_sink.h
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\include\xbyak
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        20/02/2023     07:54          99430 xbyak.h
+-a----        20/02/2023     07:54           4251 xbyak_bin2hex.h
+-a----        20/02/2023     07:54         253414 xbyak_mnemonic.h
+-a----        20/02/2023     07:54          32459 xbyak_util.h
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                pkgconfig
+-a----        12/07/2025     05:42        1038548 binary_io.lib
+-a----        12/07/2025     05:43        4031184 fmt.lib
+-a----        12/07/2025     05:43       16071148 spdlog.lib
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\lib\pkgconfig
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:43            237 fmt.pc
+-a----        12/07/2025     05:43            351 spdlog.pc
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                binary_io
+d-----        12/07/2025     23:25                boost
+d-----        12/07/2025     23:25                boost-assert
+d-----        12/07/2025     23:25                boost-config
+d-----        12/07/2025     23:25                boost-static-assert
+d-----        12/07/2025     23:25                boost-stl-interfaces
+d-----        12/07/2025     23:25                boost-type-traits
+d-----        12/07/2025     23:25                boost-uninstall
+d-----        12/07/2025     23:25                boost-vcpkg-helpers
+d-----        12/07/2025     23:25                fmt
+d-----        12/07/2025     23:25                rsm-binary-io
+d-----        12/07/2025     23:25                simpleini
+d-----        12/07/2025     23:25                spdlog
+d-----        12/07/2025     23:25                xbyak
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\binary_io
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42            900 binary_io-targets-debug.cmake
+-a----        12/07/2025     05:42            896 binary_io-targets-release.cmake
+-a----        12/07/2025     05:42           4228 binary_io-targets.cmake
+-a----        12/07/2025     05:42             62 binary_ioConfig.cmake
+-a----        12/07/2025     05:42           2827 binary_ioConfigVersion.cmake
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\boost
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42            328 vcpkg-cmake-wrapper.cmake
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\boost-assert
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42           1338 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           3724 vcpkg.spdx.json
+-a----        12/07/2025     05:42            840 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\boost-config
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                checks
+-a----        12/07/2025     05:42           1338 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           3724 vcpkg.spdx.json
+-a----        12/07/2025     05:42            762 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\boost-config\checks
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        12/07/2025     23:25                architecture
+d-----        12/07/2025     23:25                std
+-a----        22/02/2023     21:08            491 config.jam
+-a----        22/02/2023     21:08          36764 Jamfile.v2
+-a----        22/02/2023     21:08          36893 test_case.cpp
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\boost
+    -config\checks\architecture
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08              4 .gitignore
+-a----        22/02/2023     21:08            248 32.cpp
+-a----        22/02/2023     21:08            248 64.cpp
+-a----        22/02/2023     21:08            427 arm.cpp
+-a----        22/02/2023     21:08            934 combined.cpp
+-a----        22/02/2023     21:08            722 Jamfile.jam
+-a----        22/02/2023     21:08            307 mips.cpp
+-a----        22/02/2023     21:08            485 power.cpp
+-a----        22/02/2023     21:08            254 riscv.cpp
+-a----        22/02/2023     21:08            263 s390x.cpp
+-a----        22/02/2023     21:08            284 sparc.cpp
+-a----        22/02/2023     21:08            634 x86.cpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\boost-config\checks\std
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        22/02/2023     21:08            749 cpp_aggregate_bases_17.cpp
+-a----        22/02/2023     21:08            749 cpp_aggregate_nsdmi_14.cpp
+-a----        22/02/2023     21:08            749 cpp_alias_templates_11.cpp
+-a----        22/02/2023     21:08            733 cpp_aligned_new_17.cpp
+-a----        22/02/2023     21:08            729 cpp_attributes_11.cpp
+-a----        22/02/2023     21:08            749 cpp_binary_literals_14.cpp
+-a----        22/02/2023     21:08            757 cpp_capture_star_this_17.cpp
+-a----        22/02/2023     21:08            717 cpp_char8_t_20.cpp
+-a----        22/02/2023     21:08            769 cpp_conditional_explicit_20.cpp
+-a----        22/02/2023     21:08            725 cpp_constexpr_11.cpp
+-a----        22/02/2023     21:08            725 cpp_constexpr_14.cpp
+-a----        22/02/2023     21:08            725 cpp_constexpr_17.cpp
+-a----        22/02/2023     21:08            721 cpp_decltype_11.cpp
+-a----        22/02/2023     21:08            741 cpp_decltype_auto_14.cpp
+-a----        22/02/2023     21:08            753 cpp_deduction_guides_17.cpp
+-a----        22/02/2023     21:08            781 cpp_delegating_constructors_11.cpp
+-a----        22/02/2023     21:08            773 cpp_enumerator_attributes_17.cpp
+-a----        22/02/2023     21:08            729 cpp_exceptions_03.cpp
+-a----        22/02/2023     21:08            765 cpp_explicit_conversion_11.cpp
+-a----        22/02/2023     21:08            753 cpp_fold_expressions_17.cpp
+-a----        22/02/2023     21:08            749 cpp_generic_lambdas_14.cpp
+-a----        22/02/2023     21:08            781 cpp_guaranteed_copy_elision_17.cpp
+-a----        22/02/2023     21:08            725 cpp_hex_float_17.cpp
+-a----        22/02/2023     21:08            737 cpp_if_constexpr_17.cpp
+-a----        22/02/2023     21:08            777 cpp_impl_destroying_delete_20.cpp
+-a----        22/02/2023     21:08            789 cpp_impl_three_way_comparison_20.cpp
+-a----        22/02/2023     21:08            781 cpp_inheriting_constructors_11.cpp
+-a----        22/02/2023     21:08            781 cpp_inheriting_constructors_17.cpp
+-a----        22/02/2023     21:08            757 cpp_initializer_lists_11.cpp
+-a----        22/02/2023     21:08            741 cpp_init_captures_14.cpp
+-a----        22/02/2023     21:08            753 cpp_inline_variables_17.cpp
+-a----        22/02/2023     21:08            717 cpp_lambdas_11.cpp
+-a----        22/02/2023     21:08            800 cpp_lib_addressof_constexpr_17.cpp
+-a----        22/02/2023     21:08            852 cpp_lib_allocator_traits_is_always_equal_17.cpp
+-a----        22/02/2023     21:08            733 cpp_lib_any_17.cpp
+-a----        22/02/2023     21:08            743 cpp_lib_apply_17.cpp
+-a----        22/02/2023     21:08            786 cpp_lib_array_constexpr_17.cpp
+-a----        22/02/2023     21:08            757 cpp_lib_as_const_17.cpp
+-a----        22/02/2023     21:08            828 cpp_lib_atomic_is_always_lock_free_17.cpp
+-a----        22/02/2023     21:08            764 cpp_lib_atomic_ref_20.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_bind_front_20.cpp
+-a----        22/02/2023     21:08            753 cpp_lib_bit_cast_20.cpp
+-a----        22/02/2023     21:08            781 cpp_lib_bool_constant_17.cpp
+-a----        22/02/2023     21:08            808 cpp_lib_boyer_moore_searcher_17.cpp
+-a----        22/02/2023     21:08            741 cpp_lib_byte_17.cpp
+-a----        22/02/2023     21:08            752 cpp_lib_char8_t_20.cpp
+-a----        22/02/2023     21:08            748 cpp_lib_chrono_17.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_chrono_udls_14.cpp
+-a----        22/02/2023     21:08            747 cpp_lib_clamp_17.cpp
+-a----        22/02/2023     21:08            773 cpp_lib_complex_udls_14.cpp
+-a----        22/02/2023     21:08            758 cpp_lib_concepts_20.cpp
+-a----        22/02/2023     21:08            779 cpp_lib_constexpr_misc_20.cpp
+-a----        22/02/2023     21:08            827 cpp_lib_constexpr_swap_algorithms_20.cpp
+-a----        22/02/2023     21:08            789 cpp_lib_destroying_delete_20.cpp
+-a----        22/02/2023     21:08            816 cpp_lib_enable_shared_from_this_17.cpp
+-a----        22/02/2023     21:08            756 cpp_lib_erase_if_20.cpp
+-a----        22/02/2023     21:08            793 cpp_lib_exchange_function_14.cpp
+-a----        22/02/2023     21:08            763 cpp_lib_execution_17.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_filesystem_17.cpp
+-a----        22/02/2023     21:08            753 cpp_lib_gcd_lcm_17.cpp
+-a----        22/02/2023     21:08            825 cpp_lib_generic_associative_lookup_14.cpp
+-a----        22/02/2023     21:08            827 cpp_lib_generic_unordered_lookup_20.cpp
+-a----        22/02/2023     21:08            825 cpp_lib_hardware_interference_size_17.cpp
+-a----        22/02/2023     21:08            861 cpp_lib_has_unique_object_representations_17.cpp
+-a----        22/02/2023     21:08            743 cpp_lib_hypot_17.cpp
+-a----        22/02/2023     21:08            846 cpp_lib_incomplete_container_elements_17.cpp
+-a----        22/02/2023     21:08            789 cpp_lib_integer_sequence_14.cpp
+-a----        22/02/2023     21:08            833 cpp_lib_integral_constant_callable_14.cpp
+-a----        22/02/2023     21:08            752 cpp_lib_invoke_17.cpp
+-a----        22/02/2023     21:08            777 cpp_lib_is_aggregate_17.cpp
+-a----        22/02/2023     21:08            813 cpp_lib_is_constant_evaluated_20.cpp
+-a----        22/02/2023     21:08            761 cpp_lib_is_final_14.cpp
+-a----        22/02/2023     21:08            777 cpp_lib_is_invocable_17.cpp
+-a----        22/02/2023     21:08            789 cpp_lib_is_null_pointer_14.cpp
+-a----        22/02/2023     21:08            777 cpp_lib_is_swappable_17.cpp
+-a----        22/02/2023     21:08            749 cpp_lib_launder_17.cpp
+-a----        22/02/2023     21:08            822 cpp_lib_list_remove_return_type_20.cpp
+-a----        22/02/2023     21:08            785 cpp_lib_logical_traits_17.cpp
+-a----        22/02/2023     21:08            783 cpp_lib_make_from_tuple_17.cpp
+-a----        22/02/2023     21:08            810 cpp_lib_make_reverse_iterator_14.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_make_unique_14.cpp
+-a----        22/02/2023     21:08            781 cpp_lib_map_try_emplace_17.cpp
+-a----        22/02/2023     21:08            811 cpp_lib_math_special_functions_17.cpp
+-a----        22/02/2023     21:08            793 cpp_lib_memory_resource_17.cpp
+-a----        22/02/2023     21:08            769 cpp_lib_node_extract_17.cpp
+-a----        22/02/2023     21:08            830 cpp_lib_nonmember_container_access_17.cpp
+-a----        22/02/2023     21:08            752 cpp_lib_not_fn_17.cpp
+-a----        22/02/2023     21:08            782 cpp_lib_null_iterators_14.cpp
+-a----        22/02/2023     21:08            758 cpp_lib_optional_17.cpp
+-a----        22/02/2023     21:08            799 cpp_lib_parallel_algorithm_17.cpp
+-a----        22/02/2023     21:08            789 cpp_lib_quoted_string_io_14.cpp
+-a----        22/02/2023     21:08            751 cpp_lib_ranges_20.cpp
+-a----        22/02/2023     21:08            808 cpp_lib_raw_memory_algorithms_17.cpp
+-a----        22/02/2023     21:08            792 cpp_lib_result_of_sfinae_14.cpp
+-a----        22/02/2023     21:08            835 cpp_lib_robust_nonmodifying_seq_ops_14.cpp
+-a----        22/02/2023     21:08            751 cpp_lib_sample_17.cpp
+-a----        22/02/2023     21:08            767 cpp_lib_scoped_lock_17.cpp
+-a----        22/02/2023     21:08            778 cpp_lib_shared_mutex_17.cpp
+-a----        22/02/2023     21:08            792 cpp_lib_shared_ptr_arrays_17.cpp
+-a----        22/02/2023     21:08            804 cpp_lib_shared_ptr_weak_type_17.cpp
+-a----        22/02/2023     21:08            802 cpp_lib_shared_timed_mutex_14.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_string_udls_14.cpp
+-a----        22/02/2023     21:08            768 cpp_lib_string_view_17.cpp
+-a----        22/02/2023     21:08            805 cpp_lib_three_way_comparison_20.cpp
+-a----        22/02/2023     21:08            757 cpp_lib_to_chars_17.cpp
+-a----        22/02/2023     21:08            841 cpp_lib_transformation_trait_aliases_14.cpp
+-a----        22/02/2023     21:08            812 cpp_lib_transparent_operators_14.cpp
+-a----        22/02/2023     21:08            808 cpp_lib_transparent_operators_17.cpp
+-a----        22/02/2023     21:08            781 cpp_lib_tuples_by_type_14.cpp
+-a----        22/02/2023     21:08            783 cpp_lib_tuple_element_t_14.cpp
+-a----        22/02/2023     21:08            845 cpp_lib_type_trait_variable_templates_17.cpp
+-a----        22/02/2023     21:08            803 cpp_lib_uncaught_exceptions_17.cpp
+-a----        22/02/2023     21:08            831 cpp_lib_unordered_map_try_emplace_17.cpp
+-a----        22/02/2023     21:08            753 cpp_lib_variant_17.cpp
+-a----        22/02/2023     21:08            753 cpp_lib_void_t_17.cpp
+-a----        22/02/2023     21:08            769 cpp_namespace_attributes_17.cpp
+-a----        22/02/2023     21:08            777 cpp_noexcept_function_type_17.cpp
+-a----        22/02/2023     21:08            773 cpp_nontype_template_args_17.cpp
+-a----        22/02/2023     21:08            813 cpp_nontype_template_parameter_auto_17.cpp
+-a----        22/02/2023     21:08            817 cpp_nontype_template_parameter_class_20.cpp
+-a----        22/02/2023     21:08            709 cpp_nsdmi_11.cpp
+-a----        22/02/2023     21:08            749 cpp_range_based_for_11.cpp
+-a----        22/02/2023     21:08            749 cpp_range_based_for_17.cpp
+-a----        22/02/2023     21:08            733 cpp_raw_strings_11.cpp
+-a----        22/02/2023     21:08            745 cpp_ref_qualifiers_11.cpp
+-a----        22/02/2023     21:08            773 cpp_return_type_deduction_14.cpp
+-a----        22/02/2023     21:08            705 cpp_rtti_03.cpp
+-a----        22/02/2023     21:08            757 cpp_rvalue_references_11.cpp
+-a----        22/02/2023     21:08            761 cpp_sized_deallocation_14.cpp
+-a----        22/02/2023     21:08            741 cpp_static_assert_11.cpp
+-a----        22/02/2023     21:08            741 cpp_static_assert_17.cpp
+-a----        22/02/2023     21:08            765 cpp_structured_bindings_17.cpp
+-a----        22/02/2023     21:08            777 cpp_template_template_args_17.cpp
+-a----        22/02/2023     21:08            777 cpp_threadsafe_static_init_11.cpp
+-a----        22/02/2023     21:08            761 cpp_unicode_characters_11.cpp
+-a----        22/02/2023     21:08            753 cpp_unicode_literals_11.cpp
+-a----        22/02/2023     21:08            773 cpp_user_defined_literals_11.cpp
+-a----        22/02/2023     21:08            761 cpp_variable_templates_14.cpp
+-a----        22/02/2023     21:08            761 cpp_variadic_templates_11.cpp
+-a----        22/02/2023     21:08            745 cpp_variadic_using_17.cpp
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\boost-static-assert
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42           1338 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           3780 vcpkg.spdx.json
+-a----        12/07/2025     05:42            840 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\boost-stl-interfaces
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42           1338 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           3788 vcpkg.spdx.json
+-a----        12/07/2025     05:42           1001 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\boost-type-traits
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42           1338 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           3764 vcpkg.spdx.json
+-a----        12/07/2025     05:42            925 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\boost-uninstall
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42           3797 vcpkg.spdx.json
+-a----        12/07/2025     05:42            605 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\boost-vcpkg-helpers
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        12/07/2025     05:42            818 boost-modular-headers.cmake
+-a----        12/07/2025     05:42           1338 boost_LICENSE_1_0.txt
+-a----        12/07/2025     05:42           1096 copyright
+-a----        12/07/2025     05:42            207 usage
+-a----        12/07/2025     05:42           5638 vcpkg.spdx.json
+-a----        12/07/2025     05:42           1102 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\fmt
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        10/05/2023     00:55           1431 copyright
+-a----        12/07/2025     05:43           1905 fmt-config-version.cmake
+-a----        12/07/2025     05:43           1027 fmt-config.cmake
+-a----        12/07/2025     05:43            828 fmt-targets-debug.cmake
+-a----        12/07/2025     05:43            824 fmt-targets-release.cmake
+-a----        12/07/2025     05:43           4515 fmt-targets.cmake
+-a----        11/07/2025     23:13            265 usage
+-a----        12/07/2025     05:43           5598 vcpkg.spdx.json
+-a----        12/07/2025     05:42           1430 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\rsm-binary-io
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        30/04/2022     00:58           1070 copyright
+-a----        12/07/2025     05:42           3777 vcpkg.spdx.json
+-a----        12/07/2025     05:42            923 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\simpleini
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        15/03/2022     22:36           1089 copyright
+-a----        12/07/2025     05:42           3807 vcpkg.spdx.json
+-a----        12/07/2025     05:42            677 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3
+    Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\spdlog
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        02/11/2022     23:13           1348 copyright
+-a----        12/07/2025     05:43           1399 spdlogConfig.cmake
+-a----        12/07/2025     05:43            864 spdlogConfigTargets-debug.cmake
+-a----        12/07/2025     05:43            860 spdlogConfigTargets-release.cmake
+-a----        12/07/2025     05:43           4674 spdlogConfigTargets.cmake
+-a----        12/07/2025     05:43           2830 spdlogConfigVersion.cmake
+-a----        11/07/2025     23:13            286 usage
+-a----        12/07/2025     05:43           5546 vcpkg.spdx.json
+-a----        12/07/2025     05:42           1575 vcpkg_abi_info.txt
+
+
+    Directory: D:\Desktop\Po3 Example\SensiblyOrbitingSatellites\buildae\vcpkg_installed\x64-windows-static\share\xbyak
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        20/02/2023     07:54           1501 copyright
+-a----        12/07/2025     05:43           3718 vcpkg.spdx.json
+-a----        12/07/2025     05:42            838 vcpkg_abi_info.txt
+-a----        12/07/2025     05:43           2824 xbyak-config-version.cmake
+-a----        12/07/2025     05:43            955 xbyak-config.cmake
+-a----        12/07/2025     05:43           4184 xbyak-targets.cmake
